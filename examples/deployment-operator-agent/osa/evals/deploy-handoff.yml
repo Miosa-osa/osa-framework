@@ -1,0 +1,6 @@
+name: deploy-handoff
+prompt: Write a deployment handoff after a failed smoke check.
+checks:
+  - includes_status
+  - includes_rollback_path
+  - includes_owner

@@ -1,59 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { projectRoot, writeFileIfAllowed } from "./fs.js";
-
-const scaffold = [
-  ["osa/AGENTS.md", "# OSA Project Instructions\n\nKeep always-needed operating context here.\n"],
-  [
-    "osa/agent.yml",
-    "name: osa-agent\ndescription: Filesystem-defined OSA agent operating environment.\nruntime:\n  target: local\n",
-  ],
-  [
-    "osa/instructions.md",
-    "You are an OSA agent. Inspect context, use tools carefully, and report uncertainty.\n",
-  ],
-  [
-    "osa/permissions.yml",
-    "filesystem:\n  read:\n    - .\n  write:\n    - ./workspace\nnetwork:\n  default: deny\nsecrets:\n  allow: []\napprovals:\n  required_for:\n    - network:external\n    - filesystem:write:outside_workspace\n",
-  ],
-  [
-    "osa/computers/default.yml",
-    "enabled: false\nkind: miosa-computer\nsize: standard\ncapabilities:\n  browser: true\n  screenshot: true\n  shell: true\n  desktop: true\n",
-  ],
-  [
-    "osa/connections/github.yml",
-    "type: mcp\ndescription: GitHub repository operations.\nauth:\n  mode: env\n  variable: GITHUB_TOKEN\n",
-  ],
-  [
-    "osa/channels/web.yml",
-    "type: web\ndescription: HTTP chat or app-facing channel.\nentrypoint: /api/osa\n",
-  ],
-  ["osa/docs/README.md", "# OSA Project Docs\n\nReference material for this agent.\n"],
-  ["osa/evals/smoke.yml", "name: smoke\nprompt: Summarize this OSA project.\nchecks:\n  - completed\n"],
-  [
-    "osa/schedules/daily-summary.yml",
-    "name: daily-summary\ncron: \"0 14 * * 1-5\"\nprompt: Summarize open work and blocked follow-ups.\n",
-  ],
-  [
-    "osa/skills/getting-started/SKILL.md",
-    "---\nname: getting-started\ndescription: Use when explaining the OSA project layout.\ntrust: local\n---\n\nExplain the OSA project layout and recommend `osa info`.\n",
-  ],
-  [
-    "osa/subagents/investigator/agent.yml",
-    "name: investigator\ndescription: Research and evidence-gathering subagent.\nmodel: default\n",
-  ],
-  [
-    "osa/subagents/investigator/instructions.md",
-    "Find primary sources, preserve links, and separate facts from inferences.\n",
-  ],
-  [
-    "osa/tools/get_weather.ts",
-    "export default {\n  name: \"get_weather\",\n  description: \"Return mocked weather for a city.\",\n  inputSchema: {\n    type: \"object\",\n    properties: { city: { type: \"string\" } },\n    required: [\"city\"],\n  },\n  async execute({ city }) {\n    return { city, condition: \"Sunny\", temperatureF: 72 };\n  },\n};\n",
-  ],
-];
+import { getTemplateScaffold } from "./templates.js";
 
 export function initProject(target = ".", options = {}) {
   const root = projectRoot(target);
+  const template = options.template ?? "default";
+  const scaffold = getTemplateScaffold(template);
   fs.mkdirSync(root, { recursive: true });
   const results = scaffold.map(([file, content]) => writeFileIfAllowed(root, file, content, options));
   const written = results.filter((item) => item.written).map((item) => item.path);
@@ -63,7 +16,7 @@ export function initProject(target = ".", options = {}) {
     err.code = "OSA_PROJECT_EXISTS";
     throw err;
   }
-  return { projectRoot: root, written, skipped };
+  return { projectRoot: root, template, written, skipped };
 }
 
 export function findProjectRoot(start = process.cwd()) {

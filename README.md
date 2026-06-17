@@ -66,10 +66,12 @@ uses that authoring model, but targets MIOSA's platform primitives:
 
 ```bash
 osa init [target]
+osa init [target] --template repo-maintainer
 osa info [target]
 osa build [target]
 osa skills [target]
 osa docs
+osa templates
 ```
 
 `osa docs` prints the bundled documentation path. Coding agents can read those
@@ -81,6 +83,16 @@ Real examples live in [`examples/`](examples):
 
 - [`examples/clinic-ops-agent`](examples/clinic-ops-agent): operational support agent with browser QA, schedule, GitHub/MCP connection, approvals, and a specialist investigator subagent.
 - [`examples/browser-qa-agent`](examples/browser-qa-agent): focused browser workflow QA agent using MIOSA Computer capabilities.
+- [`examples/repo-maintainer-agent`](examples/repo-maintainer-agent): engineering agent for PR review, CI triage, release notes, and issue maintenance.
+- [`examples/deployment-operator-agent`](examples/deployment-operator-agent): production rollout, smoke check, rollback, and incident handoff agent.
+
+Built-in templates:
+
+- `default`
+- `browser-qa`
+- `clinic-ops`
+- `repo-maintainer`
+- `deployment-operator`
 
 ## Library
 

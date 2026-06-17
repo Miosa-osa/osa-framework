@@ -1,6 +1,6 @@
 {
   "name": "@miosa/osa",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Filesystem-first framework for MIOSA OSA Projects.",
   "type": "module",
   "main": "./src/index.js",
@@ -13,6 +13,7 @@
     "./manifest": "./src/manifest.js",
     "./skills": "./src/skills.js",
     "./docs": "./src/docs.js",
+    "./templates": "./src/templates.js",
     "./package.json": "./package.json"
   },
   "files": [

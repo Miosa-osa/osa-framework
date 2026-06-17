@@ -1,0 +1,3 @@
+type: api
+description: Deployment event and incident handoff channel.
+entrypoint: /api/deployment-operator

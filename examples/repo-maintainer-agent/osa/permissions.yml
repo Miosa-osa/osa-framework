@@ -1,0 +1,17 @@
+filesystem:
+  read:
+    - .
+  write:
+    - ./workspace
+network:
+  default: deny
+  allow:
+    - api.github.com
+secrets:
+  allow:
+    - GITHUB_TOKEN
+approvals:
+  required_for:
+    - git:push
+    - release:publish
+    - destructive_change

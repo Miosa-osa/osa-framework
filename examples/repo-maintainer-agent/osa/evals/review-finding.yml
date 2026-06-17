@@ -1,0 +1,6 @@
+name: review-finding
+prompt: Review a risky auth change.
+checks:
+  - cites_file_line
+  - prioritizes_regression
+  - includes_test_gap

@@ -1,0 +1,3 @@
+name: weekly-maintenance
+cron: "0 15 * * 1"
+prompt: Review stale issues, failing checks, dependency risk, and release blockers.

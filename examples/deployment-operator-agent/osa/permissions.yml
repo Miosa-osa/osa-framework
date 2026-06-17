@@ -1,0 +1,17 @@
+filesystem:
+  read:
+    - .
+  write:
+    - ./workspace
+network:
+  default: deny
+  allow:
+    - api.miosa.ai
+secrets:
+  allow:
+    - MIOSA_API_KEY
+approvals:
+  required_for:
+    - deploy:production
+    - rollback:production
+    - domain_change

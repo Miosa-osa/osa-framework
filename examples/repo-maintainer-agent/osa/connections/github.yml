@@ -1,0 +1,5 @@
+type: mcp
+description: GitHub issues, PRs, comments, and CI context.
+auth:
+  mode: env
+  variable: GITHUB_TOKEN

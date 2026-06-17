@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { initProject, inspectProject, buildProject, listDocs } from "../src/index.js";
+import { initProject, inspectProject, buildProject, listDocs, listTemplates } from "../src/index.js";
 
 function tmp() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "osa-framework-"));
@@ -32,6 +32,21 @@ test("builds artifacts", () => {
   assert.ok(fs.existsSync(path.join(root, ".miosa", "osa-build.json")));
 });
 
+test("initializes named templates", () => {
+  const templateNames = listTemplates().map((template) => template.name);
+  assert.deepEqual(templateNames, ["default", "browser-qa", "clinic-ops", "repo-maintainer", "deployment-operator"]);
+
+  for (const template of templateNames) {
+    const root = tmp();
+    const result = initProject(root, { template });
+    assert.equal(result.template, template);
+    const inspected = inspectProject(root);
+    assert.equal(inspected.manifest.diagnostics.errors, 0);
+    assert.ok(inspected.manifest.skills.length > 0);
+    assert.ok(inspected.manifest.tools.length > 0);
+  }
+});
+
 test("lists bundled docs", () => {
   const docs = listDocs();
   assert.equal(docs.includes("docs/getting-started.md"), true);
@@ -39,7 +54,12 @@ test("lists bundled docs", () => {
 });
 
 test("builds launch examples", () => {
-  for (const example of ["clinic-ops-agent", "browser-qa-agent"]) {
+  for (const example of [
+    "clinic-ops-agent",
+    "browser-qa-agent",
+    "repo-maintainer-agent",
+    "deployment-operator-agent",
+  ]) {
     const root = path.resolve("examples", example);
     const inspected = inspectProject(root);
     assert.equal(inspected.manifest.diagnostics.errors, 0);

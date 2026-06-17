@@ -3,13 +3,14 @@ import { initProject } from "./project.js";
 import { inspectProject, writeArtifacts } from "./manifest.js";
 import { buildProject } from "./build.js";
 import { docsPath, listDocs } from "./docs.js";
+import { listTemplates } from "./templates.js";
 
 const [, , command = "help", ...args] = process.argv;
 
 try {
   if (command === "init") {
-    const target = args[0] ?? ".";
-    const result = initProject(target, { force: args.includes("--force") });
+    const target = firstPositional(args) ?? ".";
+    const result = initProject(target, { force: args.includes("--force"), template: optionValue(args, "--template") ?? "default" });
     print(result);
   } else if (command === "info") {
     const target = args[0] && !args[0].startsWith("--") ? args[0] : ".";
@@ -24,15 +25,18 @@ try {
     print(inspectProject(target).manifest.skills);
   } else if (command === "docs") {
     print({ docsPath: docsPath(), docs: listDocs() });
+  } else if (command === "templates") {
+    print(listTemplates());
   } else {
     console.log(`osa
 
 Commands:
-  osa init [target]
+  osa init [target] [--template <name>]
   osa info [target]
   osa build [target]
   osa skills [target]
   osa docs
+  osa templates
 `);
   }
 } catch (error) {
@@ -42,4 +46,23 @@ Commands:
 
 function print(value) {
   console.log(JSON.stringify(value, null, 2));
+}
+
+function firstPositional(args) {
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--force") continue;
+    if (arg === "--template") {
+      index += 1;
+      continue;
+    }
+    if (!arg.startsWith("--")) return arg;
+  }
+  return undefined;
+}
+
+function optionValue(args, name) {
+  const index = args.indexOf(name);
+  if (index === -1) return undefined;
+  return args[index + 1];
 }

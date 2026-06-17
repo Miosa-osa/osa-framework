@@ -1,5 +1,5 @@
 {
-  "name": "clinic-ops-agent-example",
+  "name": "deployment-operator-agent-example",
   "private": true,
   "type": "module",
   "scripts": {
