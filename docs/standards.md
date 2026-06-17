@@ -21,16 +21,16 @@ That file must answer:
 - When should it ask for approval?
 - What does a good answer or completed task look like?
 
-Move to the richer `osa/` layout only when the project needs explicit tools,
+Move to the richer `agent/` layout only when the project needs explicit tools,
 skills, subagents, schedules, channels, evals, permissions, docs, or runtime
 targets.
 
 ## Directory Standard
 
 ```text
-osa/
+agent/
   AGENTS.md
-  agent.yml
+  agent.ts
   instructions.md
   permissions.yml
   computers/
@@ -38,10 +38,10 @@ osa/
   channels/
   schedules/
   docs/
-  evals/
   skills/
   subagents/
   tools/
+evals/
 ```
 
 Every file should earn its place. Empty folders and vague examples are worse
@@ -186,7 +186,7 @@ For each schedule, define:
 
 Use the smallest runtime that can do the job:
 
-- `agent/` only: authoring and local inspection
+- `agent/instructions.md` only: authoring and local inspection
 - Sandbox: code, repo, file, and server work
 - Computer: browser or desktop automation
 - OpenComputer/BYOC: customer-controlled runtime
@@ -209,6 +209,9 @@ Current examples:
 - `examples/clinic-ops-agent`
 - `examples/repo-maintainer-agent`
 - `examples/deployment-operator-agent`
+
+Every non-standard example should use `agent/` for the authored surface and
+root-level `evals/` for behavior checks.
 
 ## Publishing Checklist
 

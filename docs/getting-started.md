@@ -1,21 +1,26 @@
 # Getting Started
 
-Create a project:
+Create the standard one-file project:
 
 ```bash
 npx @miosa/osa init my-agent
 cd my-agent
-npx @miosa/osa info
-npx @miosa/osa build
 ```
 
-The default starter writes only:
+It writes only:
 
 ```text
 agent/instructions.md
 ```
 
-Before publishing a serious project, read [`standards.md`](standards.md).
+Edit that file, then build:
+
+```bash
+npx @miosa/osa build
+```
+
+For the full one-file guide, read [`standard.md`](standard.md). Before
+publishing a serious project, read [`standards.md`](standards.md).
 
 Publish and deploy through the MIOSA CLI:
 

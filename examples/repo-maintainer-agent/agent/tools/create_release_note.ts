@@ -1,4 +1,6 @@
-export default {
+import { defineTool } from "@miosa/osa/tools";
+
+export default defineTool({
   name: "create_release_note",
   description: "Create a release note entry from merged changes.",
   inputSchema: {
@@ -12,4 +14,4 @@ export default {
   async execute({ title, changes }) {
     return { title, body: changes.map((change) => `- ${change}`).join("\n") };
   },
-};
+});

@@ -1,4 +1,0 @@
-name: deployment-operator-agent
-description: Production operator for deploys, smoke checks, rollbacks, and incident handoff.
-runtime:
-  target: miosa-cloud

@@ -1,4 +1,6 @@
-export default {
+import { defineTool } from "@miosa/osa/tools";
+
+export default defineTool({
   name: "record_smoke_result",
   description: "Record a deployment smoke test result.",
   inputSchema: {
@@ -13,4 +15,4 @@ export default {
   async execute(input) {
     return { ...input, recorded: true };
   },
-};
+});

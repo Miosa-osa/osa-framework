@@ -50,8 +50,13 @@ test("initializes named templates", () => {
       assert.equal(inspected.manifest.skills.length, 0);
       assert.equal(inspected.manifest.tools.length, 0);
     } else {
+      assert.equal(inspected.manifest.sourceRoot, "agent");
+      assert.equal(inspected.manifest.agent.config, "agent/agent.ts");
+      assert.ok(result.written.includes("agent/agent.ts"));
+      assert.ok(result.written.some((file) => file.startsWith("evals/")));
       assert.ok(inspected.manifest.skills.length > 0);
       assert.ok(inspected.manifest.tools.length > 0);
+      assert.ok(inspected.manifest.evals.length > 0);
     }
   }
 });
@@ -80,6 +85,17 @@ test("inspects a hand-written one-file agent layout", () => {
   assert.equal(build.errors, 0);
 });
 
+test("keeps legacy osa layout compatibility", () => {
+  const root = tmp();
+  fs.mkdirSync(path.join(root, "osa"), { recursive: true });
+  fs.writeFileSync(path.join(root, "osa", "instructions.md"), "Legacy project instructions.\n");
+
+  const inspected = inspectProject(root);
+  assert.equal(inspected.manifest.sourceRoot, "osa");
+  assert.equal(inspected.manifest.diagnostics.errors, 0);
+  assert.equal(inspected.manifest.context.instructions[0], "osa/instructions.md");
+});
+
 test("lists bundled docs", () => {
   const docs = listDocs();
   assert.equal(docs.includes("docs/getting-started.md"), true);
@@ -102,8 +118,11 @@ test("builds launch examples", () => {
       assert.equal(inspected.manifest.tools.length, 0);
       assert.equal(inspected.manifest.evals.length, 0);
     } else {
+      assert.equal(inspected.manifest.sourceRoot, "agent");
+      assert.equal(inspected.manifest.agent.config, "agent/agent.ts");
       assert.ok(inspected.manifest.tools.length > 0);
       assert.ok(inspected.manifest.evals.length > 0);
+      assert.ok(inspected.manifest.evals.every((file) => file.startsWith("evals/")));
     }
 
     const build = buildProject(root);

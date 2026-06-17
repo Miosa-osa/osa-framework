@@ -1,4 +1,0 @@
-name: repo-maintainer-agent
-description: Engineering agent for issue triage, PR review, CI debugging, and release notes.
-runtime:
-  target: sandbox

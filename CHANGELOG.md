@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.8
+
+- Put the standard one-file workflow at the top of the README.
+- Add `docs/standard.md` with exact standard-agent usage.
+- Make `agent/` the canonical rich project layout.
+- Move generated evals to project-level `evals/`.
+- Add `agent.ts` scaffold support with `defineAgent` and typed tool helper
+  imports.
+- Convert bundled examples from `osa/` to canonical `agent/` layouts.
+- Preserve legacy `osa/` inspection for existing projects.
+- Clarify when users should grow from one-file `agent/instructions.md` to full
+  agent project slots.
+
 ## 0.1.7
 
 - Add `examples/standard-agent` as the visible one-file starter example.

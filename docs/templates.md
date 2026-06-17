@@ -4,6 +4,8 @@ OSA ships built-in templates for common production agent shapes.
 
 ```bash
 osa templates
+osa init ./my-agent
+osa init ./full-agent --template full
 osa init ./repo-agent --template repo-maintainer
 osa init ./deploy-agent --template deployment-operator
 ```
@@ -19,7 +21,8 @@ osa init ./deploy-agent --template deployment-operator
 | `repo-maintainer` | You need code review, CI triage, issue cleanup, and release notes. |
 | `deployment-operator` | You need rollouts, smoke checks, rollback handoff, and incident notes. |
 
-Templates are normal OSA projects. After scaffolding, inspect the files, edit
-them, and run `osa build`.
+`standard` is the default. Templates are normal OSA projects. Rich templates use
+`agent/` for the authored surface and `evals/` at the project root. After
+scaffolding, inspect the files, edit them, and run `osa build`.
 
 `default` is kept as a compatibility alias for `standard`.

@@ -16,9 +16,9 @@ export function agentRoot(root) {
 export function projectSpecRoot(root) {
   const osa = osaRoot(root);
   const agent = agentRoot(root);
-  if (fs.existsSync(osa)) return osa;
   if (fs.existsSync(agent)) return agent;
-  return osa;
+  if (fs.existsSync(osa)) return osa;
+  return agent;
 }
 
 export function projectSpecRootName(root) {

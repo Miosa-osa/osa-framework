@@ -27,7 +27,7 @@ Use examples when you want to study a fuller pattern.
 
 ## Quality Bar
 
-Each example should:
+`standard-agent` is intentionally one file. Richer examples should:
 
 - Build with `osa build`
 - Include specific instructions

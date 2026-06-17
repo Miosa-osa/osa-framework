@@ -8,38 +8,68 @@ agent/
   instructions.md
 ```
 
-Use the richer `osa/` layout when you want explicit project slots:
+The recommended full layout is:
 
 ```text
-osa/
-  AGENTS.md
-  agent.yml
-  instructions.md
-  permissions.yml
-  computers/
-  connections/
-  channels/
-  docs/
+my-agent/
+  package.json
+  agent/
+    agent.ts
+    AGENTS.md
+    instructions.md
+    permissions.yml
+    instrumentation.ts
+    channels/
+    computers/
+    connections/
+    hooks/
+    skills/
+    lib/
+    sandbox/
+    schedules/
+    subagents/
+    tools/
   evals/
-  skills/
-  subagents/
-  tools/
 ```
+
+## Naming Rule
+
+Identity comes from the path when possible:
+
+| Path | Resolves To |
+| --- | --- |
+| `agent/tools/create_ticket_summary.ts` | tool `create_ticket_summary` |
+| `agent/connections/github.yml` | connection `github` |
+| `agent/skills/support-triage/SKILL.md` | skill `support-triage` |
+| `agent/subagents/investigator/agent.ts` | subagent `investigator` |
+| `evals/support-summary.yml` | eval `support-summary` |
+
+The root agent name comes from `package.json` `name`, falling back to the
+project directory name. Legacy `agent/agent.yml` may still override name and
+description for older projects.
 
 ## Slots
 
 | Path | Purpose |
-|---|---|
-| `agent/instructions.md` | One-file starter for simple agents. |
-| `AGENTS.md` | Always-needed operating context. |
-| `agent.yml` | Agent identity and runtime defaults. |
-| `instructions.md` | Base system instructions. |
-| `permissions.yml` | File, network, secret, tool, and Computer policy. |
-| `computers/` | Computer profiles. |
-| `connections/` | MCP/OpenAPI connection descriptors. |
-| `channels/` | Web, Slack, GitHub, API channel descriptors. |
-| `docs/` | Reference material. |
-| `evals/` | Repeatable behavior checks. |
-| `skills/` | Load-on-demand procedures. |
-| `subagents/` | Specialist child agents. |
-| `tools/` | Execution tools. |
+| --- | --- |
+| `agent/instructions.md` | Required base system instructions. |
+| `agent/agent.ts` | Optional runtime config, model, and target hints. |
+| `agent/AGENTS.md` | Always-needed operating context for coding agents. |
+| `agent/permissions.yml` | File, network, secret, tool, and Computer policy. |
+| `agent/computers/` | MIOSA Computer profiles for browser or desktop work. |
+| `agent/connections/` | MCP, OpenAPI, or service connection descriptors. |
+| `agent/channels/` | Web, Slack, GitHub, API, or product event surfaces. |
+| `agent/hooks/` | Lifecycle hooks and stream-event subscribers. |
+| `agent/docs/` | Reference material the agent actually needs. |
+| `agent/skills/` | Load-on-demand procedures and capability packs. |
+| `agent/subagents/` | Specialist child agents with their own instructions. |
+| `agent/tools/` | Typed executable integrations. |
+| `agent/schedules/` | Recurring jobs and autonomous prompts. |
+| `agent/sandbox/` | Workspace seed files and sandbox customization. |
+| `evals/` | Project-level repeatable behavior checks. |
+
+## Compatibility
+
+New projects should use `agent/`. Existing projects with `osa/` are still
+supported as a legacy authored surface so current users do not have to migrate
+immediately.

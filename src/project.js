@@ -22,7 +22,7 @@ export function initProject(target = ".", options = {}) {
 export function findProjectRoot(start = process.cwd()) {
   let current = path.resolve(start);
   while (true) {
-    if (fs.existsSync(path.join(current, "osa"))) return current;
+    if (fs.existsSync(path.join(current, "agent")) || fs.existsSync(path.join(current, "osa"))) return current;
     const parent = path.dirname(current);
     if (parent === current) return null;
     current = parent;

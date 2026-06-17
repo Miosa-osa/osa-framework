@@ -4,3 +4,4 @@ export { buildProject } from "./build.js";
 export { listSkills } from "./skills.js";
 export { docsPath, listDocs } from "./docs.js";
 export { listTemplates, getTemplateScaffold } from "./templates.js";
+export { defineAgent } from "./runtime.js";

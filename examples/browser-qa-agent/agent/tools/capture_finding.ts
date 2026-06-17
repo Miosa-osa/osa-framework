@@ -1,4 +1,6 @@
-export default {
+import { defineTool } from "@miosa/osa/tools";
+
+export default defineTool({
   name: "capture_finding",
   description: "Capture a browser QA finding.",
   inputSchema: {
@@ -14,4 +16,4 @@ export default {
   async execute(input) {
     return { ...input, status: "captured" };
   },
-};
+});

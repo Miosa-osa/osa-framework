@@ -1,5 +1,0 @@
-name: clinic-ops-agent
-description: White-label clinic operations agent for support, QA, and follow-up.
-runtime:
-  target: miosa-cloud
-model: default

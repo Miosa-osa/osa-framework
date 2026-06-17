@@ -4,17 +4,15 @@
 [![npm](https://img.shields.io/npm/v/@miosa/osa.svg)](https://www.npmjs.com/package/@miosa/osa)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-OSA is MIOSA's filesystem-first framework for agent operating environments.
+OSA is a filesystem-first framework for making your own agents on MIOSA.
 
 Package: `@miosa/osa`
 
 Repository: `Miosa-osa/osa-framework`
 
-An OSA Project packages instructions, tools, skills, docs, connections,
-channels, schedules, evals, permissions, subagents, and Computers into one
-inspectable directory.
+## Standard Start
 
-The smallest project is one file:
+One file is enough:
 
 ```text
 my-agent/
@@ -22,13 +20,44 @@ my-agent/
     instructions.md
 ```
 
-Add more files only when the agent needs them.
+Create it:
+
+```bash
+npx @miosa/osa init my-agent
+cd my-agent
+```
+
+Write what your agent should do:
+
+```md
+# Instructions
+
+You are a customer research agent.
+
+Find primary sources, summarize the important facts, and ask for approval before
+contacting anyone or changing external systems.
+```
+
+Build the manifest:
+
+```bash
+npx @miosa/osa build
+```
+
+That is the standard path. Add tools, skills, subagents, schedules, channels,
+Computers, docs, and evals only when the agent actually needs them.
+
+Read the full standard: [`docs/standard.md`](docs/standard.md).
+
+## Grow The Agent
+
+When the one-file agent needs more structure, keep growing the `agent/` directory:
 
 ```text
 my-agent/
-  osa/
+  agent/
     AGENTS.md
-    agent.yml
+    agent.ts
     instructions.md
     permissions.yml
     computers/
@@ -36,30 +65,30 @@ my-agent/
     channels/
     schedules/
     docs/
-    evals/
     skills/
     subagents/
     tools/
+  evals/
 ```
 
-## Quick Start
+Use templates when you want a prepared shape:
 
 ```bash
-npx @miosa/osa init my-agent
-cd my-agent
-npx @miosa/osa info
-npx @miosa/osa build
-```
-
-`osa init` uses the one-file `standard` template by default. Use named templates
-when you want a more opinionated project:
-
-```bash
+npx @miosa/osa init my-agent --template full
+npx @miosa/osa init browser-agent --template browser-qa
 npx @miosa/osa init repo-agent --template repo-maintainer
-npx @miosa/osa init everything-agent --template full
+npx @miosa/osa init deploy-agent --template deployment-operator
 ```
 
-Then run or deploy it through the MIOSA CLI:
+List templates:
+
+```bash
+npx @miosa/osa templates
+```
+
+## Run Or Deploy On MIOSA
+
+After building, use the MIOSA CLI:
 
 ```bash
 miosa osa publish --workspace <workspace-id>
@@ -71,14 +100,14 @@ miosa osa run "validate the browser workflow" --computer <computer-id>
 ## Why OSA
 
 Filesystem-first agents are easier to inspect, review, test, and operate. OSA
-uses that authoring model, but targets MIOSA's platform primitives:
+uses that authoring model, but targets MIOSA platform primitives:
 
 - Computers and browser-capable desktop automation
 - OpenComputers and BYOC runtime targets
 - Persistent sandboxes and workspace state
 - Durable deployment records through `miosa osa deploy`
-- Skills, tools, subagents, schedules, channels, evals, docs, and approvals
-- White-label platform deployments where the agent runs inside customer-facing products
+- Skills, tools, subagents, schedules, channels, root-level evals, docs, and approvals
+- White-label deployments where the agent runs inside customer-facing products
 
 ## Commands
 
@@ -106,8 +135,8 @@ permissions, evals, schedules, channels, examples, and deployment readiness.
 Real examples live in [`examples/`](examples):
 
 - [`examples/standard-agent`](examples/standard-agent): the one-file starter example for people making their own agent.
-- [`examples/clinic-ops-agent`](examples/clinic-ops-agent): operational support agent with browser QA, schedule, GitHub/MCP connection, approvals, and a specialist investigator subagent.
 - [`examples/browser-qa-agent`](examples/browser-qa-agent): focused browser workflow QA agent using MIOSA Computer capabilities.
+- [`examples/clinic-ops-agent`](examples/clinic-ops-agent): operational support agent with browser QA, schedule, GitHub/MCP connection, approvals, and a specialist investigator subagent.
 - [`examples/repo-maintainer-agent`](examples/repo-maintainer-agent): engineering agent for PR review, CI triage, release notes, and issue maintenance.
 - [`examples/deployment-operator-agent`](examples/deployment-operator-agent): production rollout, smoke check, rollback, and incident handoff agent.
 
@@ -121,6 +150,9 @@ Built-in templates:
 - `deployment-operator`
 
 Compatibility alias: `default` maps to `standard`.
+
+Legacy compatibility: existing projects with `osa/` still inspect and build,
+but new projects should use `agent/`.
 
 ## Library
 
