@@ -134,7 +134,8 @@ permissions, evals, schedules, channels, examples, and deployment readiness.
 
 Real examples live in [`examples/`](examples):
 
-- [`examples/standard-agent`](examples/standard-agent): the one-file starter example for people making their own agent.
+- [`examples/minimal-agent`](examples/minimal-agent): the one-file starter example for people making their own agent.
+- [`examples/standard-agent`](examples/standard-agent): full standard weather agent with instructions, model config, skill, tool, sandbox, channel, connection, subagent, schedule, and eval.
 - [`examples/browser-qa-agent`](examples/browser-qa-agent): focused browser workflow QA agent using MIOSA Computer capabilities.
 - [`examples/clinic-ops-agent`](examples/clinic-ops-agent): operational support agent with browser QA, schedule, GitHub/MCP connection, approvals, and a specialist investigator subagent.
 - [`examples/repo-maintainer-agent`](examples/repo-maintainer-agent): engineering agent for PR review, CI triage, release notes, and issue maintenance.

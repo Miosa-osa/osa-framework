@@ -26,17 +26,22 @@ const fullScaffold = [
     "enabled: false\nkind: miosa-computer\nsize: standard\ncapabilities:\n  browser: true\n  screenshot: true\n  shell: true\n  desktop: true\n",
   ],
   [
-    "agent/connections/github.yml",
-    "type: mcp\ndescription: GitHub repository operations.\nauth:\n  mode: env\n  variable: GITHUB_TOKEN\n",
+    "agent/connections/github.ts",
+    'import { defineConnection } from "@miosa/osa/connections";\n\nexport default defineConnection({\n  description: "GitHub repository operations.",\n  type: "mcp",\n  auth: {\n    mode: "env",\n    variable: "GITHUB_TOKEN",\n  },\n});\n',
   ],
   [
-    "agent/channels/web.yml",
-    "type: web\ndescription: HTTP chat or app-facing channel.\nentrypoint: /api/osa\n",
+    "agent/channels/web.ts",
+    'import { defineChannel } from "@miosa/osa/channels";\n\nexport default defineChannel({\n  description: "HTTP chat or app-facing channel.",\n  type: "web",\n  entrypoint: "/api/osa",\n});\n',
   ],
   [
-    "agent/schedules/daily-summary.yml",
-    "name: daily-summary\ncron: \"0 14 * * 1-5\"\nprompt: Summarize open work and blocked follow-ups.\n",
+    "agent/schedules/daily-summary.md",
+    '---\ncron: "0 14 * * 1-5"\n---\n\nSummarize open work and blocked follow-ups.\n',
   ],
+  [
+    "agent/sandbox/sandbox.ts",
+    'import { defineSandbox } from "@miosa/osa/sandbox";\n\nexport default defineSandbox({\n  description: "Default isolated MIOSA sandbox.",\n  resources: {\n    cpu: 2,\n    memoryGb: 4,\n  },\n});\n',
+  ],
+  ["agent/sandbox/workspace/README.md", "# Workspace\n\nSeed files copied into the agent sandbox at session start.\n"],
   [
     "agent/skills/getting-started/SKILL.md",
     "---\nname: getting-started\ndescription: Use when explaining the OSA project layout.\ntrust: local\n---\n\nExplain the OSA project layout and recommend `osa info`.\n",
@@ -118,12 +123,12 @@ const templateOverrides = {
         "filesystem:\n  read:\n    - .\n  write:\n    - ./workspace\nnetwork:\n  default: deny\n  allow:\n    - api.miosa.ai\nsecrets:\n  allow:\n    - GITHUB_TOKEN\napprovals:\n  required_for:\n    - patient_data_change\n    - outbound_message\n    - network:external\n",
       ],
       [
-        "agent/channels/support-api.yml",
-        "type: api\ndescription: Support ticket webhook and response channel.\nentrypoint: /api/clinic-ops\n",
+        "agent/channels/support-api.ts",
+        'import { defineChannel } from "@miosa/osa/channels";\n\nexport default defineChannel({\n  description: "Support ticket webhook and response channel.",\n  type: "api",\n  entrypoint: "/api/clinic-ops",\n});\n',
       ],
       [
-        "agent/schedules/daily-open-items.yml",
-        "name: daily-open-items\ncron: \"0 14 * * 1-5\"\nprompt: Summarize unresolved support items and identify blocked handoffs.\n",
+        "agent/schedules/daily-open-items.md",
+        '---\ncron: "0 14 * * 1-5"\n---\n\nSummarize unresolved support items and identify blocked handoffs.\n',
       ],
       [
         "agent/skills/support-triage/SKILL.md",
@@ -153,12 +158,12 @@ const templateOverrides = {
         "filesystem:\n  read:\n    - .\n  write:\n    - ./workspace\nnetwork:\n  default: deny\n  allow:\n    - api.github.com\nsecrets:\n  allow:\n    - GITHUB_TOKEN\napprovals:\n  required_for:\n    - git:push\n    - release:publish\n    - destructive_change\n",
       ],
       [
-        "agent/connections/github.yml",
-        "type: mcp\ndescription: GitHub issues, PRs, comments, and CI context.\nauth:\n  mode: env\n  variable: GITHUB_TOKEN\n",
+        "agent/connections/github.ts",
+        'import { defineConnection } from "@miosa/osa/connections";\n\nexport default defineConnection({\n  description: "GitHub issues, PRs, comments, and CI context.",\n  type: "mcp",\n  auth: {\n    mode: "env",\n    variable: "GITHUB_TOKEN",\n  },\n});\n',
       ],
       [
-        "agent/schedules/weekly-maintenance.yml",
-        "name: weekly-maintenance\ncron: \"0 15 * * 1\"\nprompt: Review stale issues, failing checks, dependency risk, and release blockers.\n",
+        "agent/schedules/weekly-maintenance.md",
+        '---\ncron: "0 15 * * 1"\n---\n\nReview stale issues, failing checks, dependency risk, and release blockers.\n',
       ],
       [
         "agent/skills/code-review/SKILL.md",
@@ -201,12 +206,12 @@ const templateOverrides = {
         "filesystem:\n  read:\n    - .\n  write:\n    - ./workspace\nnetwork:\n  default: deny\n  allow:\n    - api.miosa.ai\nsecrets:\n  allow:\n    - MIOSA_API_KEY\napprovals:\n  required_for:\n    - deploy:production\n    - rollback:production\n    - domain_change\n",
       ],
       [
-        "agent/channels/ops-webhook.yml",
-        "type: api\ndescription: Deployment event and incident handoff channel.\nentrypoint: /api/deployment-operator\n",
+        "agent/channels/ops-webhook.ts",
+        'import { defineChannel } from "@miosa/osa/channels";\n\nexport default defineChannel({\n  description: "Deployment event and incident handoff channel.",\n  type: "api",\n  entrypoint: "/api/deployment-operator",\n});\n',
       ],
       [
-        "agent/schedules/morning-healthcheck.yml",
-        "name: morning-healthcheck\ncron: \"0 13 * * 1-5\"\nprompt: Check deployment health, recent errors, and open incidents.\n",
+        "agent/schedules/morning-healthcheck.md",
+        '---\ncron: "0 13 * * 1-5"\n---\n\nCheck deployment health, recent errors, and open incidents.\n',
       ],
       [
         "agent/skills/release-checklist/SKILL.md",

@@ -205,13 +205,17 @@ An example is acceptable only if:
 
 Current examples:
 
+- `examples/minimal-agent`
+- `examples/standard-agent`
 - `examples/browser-qa-agent`
 - `examples/clinic-ops-agent`
 - `examples/repo-maintainer-agent`
 - `examples/deployment-operator-agent`
 
-Every non-standard example should use `agent/` for the authored surface and
-root-level `evals/` for behavior checks.
+Every non-minimal example should use `agent/` for the authored surface and
+root-level `evals/` for behavior checks. The standard example should demonstrate
+the whole production path: instructions, model config, skills, tools, sandbox,
+channels, connections, subagents, schedules, permissions, docs, and evals.
 
 ## Publishing Checklist
 

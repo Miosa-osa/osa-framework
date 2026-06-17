@@ -104,6 +104,7 @@ test("lists bundled docs", () => {
 
 test("builds launch examples", () => {
   for (const example of [
+    "minimal-agent",
     "standard-agent",
     "clinic-ops-agent",
     "browser-qa-agent",
@@ -113,10 +114,23 @@ test("builds launch examples", () => {
     const root = path.resolve("examples", example);
     const inspected = inspectProject(root);
     assert.equal(inspected.manifest.diagnostics.errors, 0);
-    if (example === "standard-agent") {
+    if (example === "minimal-agent") {
       assert.equal(inspected.manifest.sourceRoot, "agent");
       assert.equal(inspected.manifest.tools.length, 0);
       assert.equal(inspected.manifest.evals.length, 0);
+    } else if (example === "standard-agent") {
+      assert.equal(inspected.manifest.sourceRoot, "agent");
+      assert.equal(inspected.manifest.agent.config, "agent/agent.ts");
+      assert.equal(inspected.manifest.skills.length, 1);
+      assert.equal(inspected.manifest.tools[0], "agent/tools/get_weather.ts");
+      assert.equal(inspected.manifest.channels[0].path, "agent/channels/web.ts");
+      assert.equal(inspected.manifest.connections[0].path, "agent/connections/weather-api.ts");
+      assert.equal(inspected.manifest.schedules[0].path, "agent/schedules/daily-report.md");
+      assert.equal(inspected.manifest.subagents[0].config, "agent/subagents/researcher/agent.ts");
+      assert.equal(inspected.manifest.hooks[0], "agent/hooks/session-start.ts");
+      assert.equal(inspected.manifest.sandbox.config, "agent/sandbox/sandbox.ts");
+      assert.deepEqual(inspected.manifest.sandbox.workspace, ["agent/sandbox/workspace/saved-cities.json"]);
+      assert.equal(inspected.manifest.evals[0], "evals/weather-digest.yml");
     } else {
       assert.equal(inspected.manifest.sourceRoot, "agent");
       assert.equal(inspected.manifest.agent.config, "agent/agent.ts");

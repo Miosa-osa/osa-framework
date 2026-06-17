@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "projectRoot": "/Users/rhl/code/MIOSA/code/osa-framework/examples/standard-agent",
+  "sourceRoot": "agent",
+  "osaRoot": "/Users/rhl/code/MIOSA/code/osa-framework/examples/standard-agent/agent",
+  "agent": {
+    "name": "standard-agent-example",
+    "description": "Weather digest agent with tools, skills, sandbox, channels, connections, subagents, and schedules.",
+    "config": "agent/agent.ts"
+  },
+  "context": {
+    "agentsMd": "agent/AGENTS.md",
+    "instructions": [
+      "agent/instructions.md"
+    ],
+    "docs": [
+      "agent/docs/weather-policy.md"
+    ]
+  },
+  "skills": [
+    {
+      "name": "research",
+      "path": "agent/skills/research.md",
+      "source": "project",
+      "trust": "local",
+      "description": "--"
+    }
+  ],
+  "tools": [
+    "agent/tools/get_weather.ts"
+  ],
+  "subagents": [
+    {
+      "name": "researcher",
+      "path": "agent/subagents/researcher",
+      "description": "Researches local context, event risk, and source evidence for weather reports.",
+      "model": "default",
+      "config": "agent/subagents/researcher/agent.ts",
+      "instructions": "agent/subagents/researcher/instructions.md"
+    }
+  ],
+  "channels": [
+    {
+      "name": "web",
+      "path": "agent/channels/web.ts",
+      "type": "module",
+      "description": "Web chat surface for asking for a forecast or digest."
+    }
+  ],
+  "schedules": [
+    {
+      "name": "daily-report",
+      "path": "agent/schedules/daily-report.md",
+      "cron": "0 8 * * *",
+      "prompt": "Send the user a daily weather digest for their saved cities."
+    }
+  ],
+  "connections": [
+    {
+      "name": "weather-api",
+      "path": "agent/connections/weather-api.ts",
+      "type": "module",
+      "description": "Weather provider connection used by weather tools.",
+      "hasAuth": true
+    }
+  ],
+  "computers": [],
+  "hooks": [
+    "agent/hooks/session-start.ts"
+  ],
+  "sandbox": {
+    "config": "agent/sandbox/sandbox.ts",
+    "workspace": [
+      "agent/sandbox/workspace/saved-cities.json"
+    ]
+  },
+  "evals": [
+    "evals/weather-digest.yml"
+  ],
+  "diagnostics": {
+    "errors": 0,
+    "warnings": 0
+  }
+}

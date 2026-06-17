@@ -30,32 +30,68 @@ export function inspectProject(target = ".") {
     kind: item.data.kind,
   }));
 
-  const connections = yamlDir(path.join(osa, "connections"), root).map((item) => ({
-    name: item.name,
-    path: item.path,
-    type: item.data.type ?? "unknown",
-    description: item.data.description ?? "",
-    hasAuth: Boolean(item.data.auth && Object.keys(item.data.auth).length > 0),
-  }));
+  const connections = [
+    ...yamlDir(path.join(osa, "connections"), root).map((item) => ({
+      name: item.name,
+      path: item.path,
+      type: item.data.type ?? "unknown",
+      description: item.data.description ?? "",
+      hasAuth: Boolean(item.data.auth && Object.keys(item.data.auth).length > 0),
+    })),
+    ...moduleDir(path.join(osa, "connections"), root).map((item) => ({
+      name: item.name,
+      path: item.path,
+      type: "module",
+      description: readStringProperty(fs.readFileSync(path.join(root, item.path), "utf8"), "description") ?? "",
+      hasAuth: true,
+    })),
+  ];
 
-  const channels = yamlDir(path.join(osa, "channels"), root).map((item) => ({
-    name: item.name,
-    path: item.path,
-    type: item.data.type ?? "unknown",
-    description: item.data.description ?? "",
-    entrypoint: item.data.entrypoint,
-  }));
+  const channels = [
+    ...yamlDir(path.join(osa, "channels"), root).map((item) => ({
+      name: item.name,
+      path: item.path,
+      type: item.data.type ?? "unknown",
+      description: item.data.description ?? "",
+      entrypoint: item.data.entrypoint,
+    })),
+    ...moduleDir(path.join(osa, "channels"), root).map((item) => ({
+      name: item.name,
+      path: item.path,
+      type: "module",
+      description: readStringProperty(fs.readFileSync(path.join(root, item.path), "utf8"), "description") ?? "",
+    })),
+  ];
 
-  const schedules = yamlDir(path.join(osa, "schedules"), root).map((item) => ({
-    name: item.data.name ?? item.name,
-    path: item.path,
-    cron: item.data.cron,
-    prompt: item.data.prompt,
-  }));
+  const schedules = [
+    ...yamlDir(path.join(osa, "schedules"), root).map((item) => ({
+      name: item.data.name ?? item.name,
+      path: item.path,
+      cron: item.data.cron,
+      prompt: item.data.prompt,
+    })),
+    ...markdownDir(path.join(osa, "schedules"), root).map((item) => ({
+      name: item.name,
+      path: item.path,
+      cron: item.frontmatter.cron,
+      prompt: item.body.trim(),
+    })),
+    ...moduleDir(path.join(osa, "schedules"), root).map((item) => ({
+      name: item.name,
+      path: item.path,
+      cron: readStringProperty(fs.readFileSync(path.join(root, item.path), "utf8"), "cron"),
+    })),
+  ];
 
   const subagents = subagentDir(path.join(osa, "subagents"), root);
-  const tools = listFiles(path.join(osa, "tools"), root).filter((file) => /\.(mjs|js|ts)$/.test(file));
+  const tools = moduleDir(path.join(osa, "tools"), root).map((item) => item.path);
   const evals = [...listFiles(path.join(root, "evals"), root), ...listFiles(path.join(osa, "evals"), root)];
+  const sandboxConfigPath = firstExistingPath([
+    path.join(osa, "sandbox.ts"),
+    path.join(osa, "sandbox.js"),
+    path.join(osa, "sandbox", "sandbox.ts"),
+    path.join(osa, "sandbox", "sandbox.js"),
+  ]);
 
   const manifest = {
     version: 1,
@@ -79,6 +115,11 @@ export function inspectProject(target = ".") {
     schedules,
     connections,
     computers,
+    hooks: moduleDir(path.join(osa, "hooks"), root).map((item) => item.path),
+    sandbox: {
+      config: sandboxConfigPath ? rel(root, sandboxConfigPath) : undefined,
+      workspace: listFiles(path.join(osa, "sandbox", "workspace"), root),
+    },
     evals: Array.from(new Set(evals)),
     diagnostics: {
       errors: diagnostics.filter((item) => item.severity === "error").length,
@@ -110,6 +151,36 @@ function yamlDir(dir, root) {
         name: entry.name.replace(/\.ya?ml$/, ""),
         path: rel(root, full),
         data: parseSimpleYaml(fs.readFileSync(full, "utf8")),
+      };
+    });
+}
+
+function markdownDir(dir, root) {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && /\.md$/.test(entry.name))
+    .map((entry) => {
+      const full = path.join(dir, entry.name);
+      const parsed = parseMarkdownFrontmatter(fs.readFileSync(full, "utf8"));
+      return {
+        name: entry.name.replace(/\.md$/, ""),
+        path: rel(root, full),
+        ...parsed,
+      };
+    });
+}
+
+function moduleDir(dir, root) {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && /\.(mjs|js|ts)$/.test(entry.name))
+    .map((entry) => {
+      const full = path.join(dir, entry.name);
+      return {
+        name: entry.name.replace(/\.(mjs|js|ts)$/, ""),
+        path: rel(root, full),
       };
     });
 }
@@ -166,4 +237,14 @@ function readAgentMetadata(agentPath, legacyAgentPath) {
 function readStringProperty(source, property) {
   const pattern = new RegExp(`${property}:\\s*["']([^"']+)["']`);
   return pattern.exec(source)?.[1];
+}
+
+function parseMarkdownFrontmatter(source) {
+  if (!source.startsWith("---")) return { frontmatter: {}, body: source };
+  const end = source.indexOf("\n---", 3);
+  if (end === -1) return { frontmatter: {}, body: source };
+  return {
+    frontmatter: parseSimpleYaml(source.slice(3, end)),
+    body: source.slice(end + 4).replace(/^\r?\n/, ""),
+  };
 }

@@ -1,0 +1,17 @@
+filesystem:
+  read:
+    - .
+  write:
+    - ./workspace
+network:
+  default: deny
+  allow:
+    - api.weather.example
+secrets:
+  allow:
+    - WEATHER_API_KEY
+approvals:
+  required_for:
+    - outbound_message
+    - severe_weather_alert
+    - network:external

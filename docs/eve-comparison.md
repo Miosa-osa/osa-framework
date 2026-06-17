@@ -31,3 +31,18 @@ OSA should not copy Vercel-specific platform assumptions. The differentiator is
 MIOSA runtime access: Computers, persistent sandboxes, OpenComputer/BYOC targets,
 workspace-scoped deployments, white-label product surfaces, and CLI integration
 through `miosa osa`.
+
+## Launch-Page Parity Checklist
+
+The visible OSA standard example should cover the same agent-building sequence:
+
+- `instructions.md`: complete agent instructions in Markdown
+- `agent.ts`: model and runtime configuration
+- `skills/`: reusable Markdown playbooks
+- `tools/`: TypeScript model-callable tools
+- `sandbox/`: isolated workspace setup
+- `channels/`: web or product surfaces
+- `connections/`: authenticated external services
+- `subagents/`: delegated specialist agents
+- `schedules/`: durable recurring jobs
+- `evals/`: behavior checks before deployment

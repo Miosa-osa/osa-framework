@@ -5,3 +5,7 @@ export { listSkills } from "./skills.js";
 export { docsPath, listDocs } from "./docs.js";
 export { listTemplates, getTemplateScaffold } from "./templates.js";
 export { defineAgent } from "./runtime.js";
+export { defineChannel } from "./channels.js";
+export { defineConnection } from "./connections.js";
+export { defineSchedule } from "./schedules.js";
+export { defineSandbox } from "./sandbox.js";

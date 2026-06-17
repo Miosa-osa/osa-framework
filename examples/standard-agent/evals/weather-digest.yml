@@ -1,0 +1,7 @@
+name: weather-digest
+prompt: Write a daily weather digest for Austin, Chicago, and San Francisco.
+checks:
+  - uses_weather_tool
+  - includes_city_by_city_summary
+  - flags_approval_before_notification
+  - states_data_source

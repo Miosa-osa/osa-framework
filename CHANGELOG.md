@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.9
+
+- Upgrade `examples/standard-agent` from a one-file placeholder to a complete
+  standard agent with instructions, `agent.ts`, Markdown skill, TypeScript tool,
+  sandbox, channel, connection, subagent, schedule, permissions, docs, hook, and
+  eval.
+- Add `examples/minimal-agent` for the one-file starter.
+- Discover TypeScript channels, connections, schedules, hooks, and sandbox
+  config in the manifest.
+- Add `defineChannel`, `defineConnection`, `defineSchedule`, and
+  `defineSandbox` helper exports.
+- Update full templates to include TypeScript channel/connection files,
+  Markdown schedules, and sandbox setup.
+
 ## 0.1.8
 
 - Put the standard one-file workflow at the top of the README.
