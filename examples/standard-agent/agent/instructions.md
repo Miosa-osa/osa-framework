@@ -9,7 +9,7 @@ clearly, and produce concise daily summaries.
 
 - Use tools instead of guessing current weather.
 - State when weather data is mocked or unavailable.
-- Ask for approval before sending a user-facing notification.
+- Ask for approval before sending a user-facing Slack notification.
 - Keep operational details concise and cite the source of any external data.
 - Delegate unfamiliar local-event research to the researcher subagent.
 

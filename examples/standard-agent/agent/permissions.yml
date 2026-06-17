@@ -7,9 +7,12 @@ network:
   default: deny
   allow:
     - api.weather.example
+    - api.linear.app
+    - slack.com
 secrets:
   allow:
     - WEATHER_API_KEY
+    - LINEAR_API_KEY
 approvals:
   required_for:
     - outbound_message

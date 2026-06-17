@@ -9,8 +9,8 @@ agent/
   skills/research.md
   tools/get_weather.ts
   sandbox/sandbox.ts
-  channels/web.ts
-  connections/weather-api.ts
+  channels/slack.ts
+  connections/linear.ts
   subagents/researcher/agent.ts
   schedules/daily-report.md
 evals/

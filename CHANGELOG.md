@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.10
+
+- Align the visible standard example with the Eve landing-page stack names:
+  `channels/slack.ts` and `connections/linear.ts`.
+- Update the parity docs so the OSA standard example follows the same visual
+  file progression shown on Vercel's Eve site.
+
 ## 0.1.9
 
 - Upgrade `examples/standard-agent` from a one-file placeholder to a complete

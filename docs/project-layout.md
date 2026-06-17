@@ -39,7 +39,7 @@ Identity comes from the path when possible:
 | Path | Resolves To |
 | --- | --- |
 | `agent/tools/create_ticket_summary.ts` | tool `create_ticket_summary` |
-| `agent/connections/github.ts` | connection `github` |
+| `agent/connections/linear.ts` | connection `linear` |
 | `agent/skills/support-triage/SKILL.md` | skill `support-triage` |
 | `agent/subagents/investigator/agent.ts` | subagent `investigator` |
 | `evals/support-summary.yml` | eval `support-summary` |

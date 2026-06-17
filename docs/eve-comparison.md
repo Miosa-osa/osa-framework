@@ -41,8 +41,8 @@ The visible OSA standard example should cover the same agent-building sequence:
 - `skills/`: reusable Markdown playbooks
 - `tools/`: TypeScript model-callable tools
 - `sandbox/`: isolated workspace setup
-- `channels/`: web or product surfaces
-- `connections/`: authenticated external services
+- `channels/slack.ts`: channel surface for where the agent lives
+- `connections/linear.ts`: authenticated external service access
 - `subagents/`: delegated specialist agents
 - `schedules/`: durable recurring jobs
 - `evals/`: behavior checks before deployment

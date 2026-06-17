@@ -123,8 +123,8 @@ test("builds launch examples", () => {
       assert.equal(inspected.manifest.agent.config, "agent/agent.ts");
       assert.equal(inspected.manifest.skills.length, 1);
       assert.equal(inspected.manifest.tools[0], "agent/tools/get_weather.ts");
-      assert.equal(inspected.manifest.channels[0].path, "agent/channels/web.ts");
-      assert.equal(inspected.manifest.connections[0].path, "agent/connections/weather-api.ts");
+      assert.equal(inspected.manifest.channels[0].path, "agent/channels/slack.ts");
+      assert.equal(inspected.manifest.connections[0].path, "agent/connections/linear.ts");
       assert.equal(inspected.manifest.schedules[0].path, "agent/schedules/daily-report.md");
       assert.equal(inspected.manifest.subagents[0].config, "agent/subagents/researcher/agent.ts");
       assert.equal(inspected.manifest.hooks[0], "agent/hooks/session-start.ts");
