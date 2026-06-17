@@ -7,6 +7,6 @@
     "info:osa": "osa info ."
   },
   "devDependencies": {
-    "@miosa/osa": "0.1.3"
+    "@miosa/osa": "0.1.4"
   }
 }

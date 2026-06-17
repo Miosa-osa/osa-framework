@@ -1,4 +1,4 @@
-const baseScaffold = [
+const standardScaffold = [
   ["osa/AGENTS.md", "# OSA Project Instructions\n\nKeep always-needed operating context here.\n"],
   [
     "osa/agent.yml",
@@ -12,6 +12,12 @@ const baseScaffold = [
     "osa/permissions.yml",
     "filesystem:\n  read:\n    - .\n  write:\n    - ./workspace\nnetwork:\n  default: deny\nsecrets:\n  allow: []\napprovals:\n  required_for:\n    - network:external\n    - filesystem:write:outside_workspace\n",
   ],
+  ["osa/docs/README.md", "# OSA Project Docs\n\nReference material for this agent.\n"],
+  ["osa/evals/smoke.yml", "name: smoke\nprompt: Summarize this OSA project.\nchecks:\n  - completed\n"],
+];
+
+const fullScaffold = [
+  ...standardScaffold,
   [
     "osa/computers/default.yml",
     "enabled: false\nkind: miosa-computer\nsize: standard\ncapabilities:\n  browser: true\n  screenshot: true\n  shell: true\n  desktop: true\n",
@@ -24,8 +30,6 @@ const baseScaffold = [
     "osa/channels/web.yml",
     "type: web\ndescription: HTTP chat or app-facing channel.\nentrypoint: /api/osa\n",
   ],
-  ["osa/docs/README.md", "# OSA Project Docs\n\nReference material for this agent.\n"],
-  ["osa/evals/smoke.yml", "name: smoke\nprompt: Summarize this OSA project.\nchecks:\n  - completed\n"],
   [
     "osa/schedules/daily-summary.yml",
     "name: daily-summary\ncron: \"0 14 * * 1-5\"\nprompt: Summarize open work and blocked follow-ups.\n",
@@ -49,12 +53,25 @@ const baseScaffold = [
 ];
 
 const templateOverrides = {
+  standard: {
+    description: "Minimal OSA project: instructions, permissions, docs, and one smoke eval.",
+    base: standardScaffold,
+    files: [],
+  },
   default: {
-    description: "General-purpose OSA agent with every core project slot.",
+    description: "Alias for standard.",
+    base: standardScaffold,
+    hidden: true,
+    files: [],
+  },
+  full: {
+    description: "General-purpose OSA agent with every core project slot scaffolded.",
+    base: fullScaffold,
     files: [],
   },
   "browser-qa": {
     description: "Browser workflow QA agent for MIOSA Computers.",
+    base: fullScaffold,
     files: [
       ["osa/AGENTS.md", "# Browser QA Agent\n\nValidate browser workflows with precise steps, screenshots, and failure notes.\n"],
       [
@@ -82,6 +99,7 @@ const templateOverrides = {
   },
   "clinic-ops": {
     description: "White-label clinic operations agent for support, QA, and follow-up.",
+    base: fullScaffold,
     files: [
       ["osa/AGENTS.md", "# Clinic Ops Agent\n\nPrioritize patient safety, operational clarity, and auditability. Never invent clinical facts.\n"],
       [
@@ -116,6 +134,7 @@ const templateOverrides = {
   },
   "repo-maintainer": {
     description: "Engineering repo maintainer agent for issues, PR review, CI triage, and release notes.",
+    base: fullScaffold,
     files: [
       ["osa/AGENTS.md", "# Repo Maintainer Agent\n\nProtect the codebase. Prefer small diffs, clear tests, and reversible changes.\n"],
       [
@@ -163,6 +182,7 @@ const templateOverrides = {
   },
   "deployment-operator": {
     description: "Production deployment operator agent for rollouts, smoke checks, and incident handoff.",
+    base: fullScaffold,
     files: [
       ["osa/AGENTS.md", "# Deployment Operator Agent\n\nFavor boring rollouts. Verify health before and after every deployment step.\n"],
       [
@@ -207,20 +227,22 @@ const templateOverrides = {
 };
 
 export function listTemplates() {
-  return Object.entries(templateOverrides).map(([name, template]) => ({
-    name,
-    description: template.description,
-  }));
+  return Object.entries(templateOverrides)
+    .filter(([, template]) => !template.hidden)
+    .map(([name, template]) => ({
+      name,
+      description: template.description,
+    }));
 }
 
-export function getTemplateScaffold(name = "default") {
+export function getTemplateScaffold(name = "standard") {
   const template = templateOverrides[name];
   if (!template) {
     const err = new Error(`Unknown OSA template "${name}". Run "osa templates" to list options.`);
     err.code = "OSA_TEMPLATE_NOT_FOUND";
     throw err;
   }
-  return mergeScaffold(baseScaffold, template.files);
+  return mergeScaffold(template.base, template.files);
 }
 
 function mergeScaffold(base, overrides) {

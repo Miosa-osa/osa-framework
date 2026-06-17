@@ -13,14 +13,15 @@ test("initializes and inspects an OSA project", () => {
   const root = tmp();
   const result = initProject(root);
   assert.ok(result.written.includes("osa/AGENTS.md"));
+  assert.equal(result.template, "standard");
 
   const inspected = inspectProject(root);
   assert.equal(inspected.manifest.agent.name, "osa-agent");
-  assert.equal(inspected.manifest.skills[0].name, "getting-started");
-  assert.equal(inspected.manifest.tools.includes("osa/tools/get_weather.ts"), true);
-  assert.equal(inspected.manifest.channels[0].name, "web");
-  assert.equal(inspected.manifest.schedules[0].name, "daily-summary");
-  assert.equal(inspected.manifest.subagents[0].name, "investigator");
+  assert.equal(inspected.manifest.skills.length, 0);
+  assert.equal(inspected.manifest.tools.length, 0);
+  assert.equal(inspected.manifest.channels.length, 0);
+  assert.equal(inspected.manifest.schedules.length, 0);
+  assert.equal(inspected.manifest.subagents.length, 0);
 });
 
 test("builds artifacts", () => {
@@ -34,7 +35,7 @@ test("builds artifacts", () => {
 
 test("initializes named templates", () => {
   const templateNames = listTemplates().map((template) => template.name);
-  assert.deepEqual(templateNames, ["default", "browser-qa", "clinic-ops", "repo-maintainer", "deployment-operator"]);
+  assert.deepEqual(templateNames, ["standard", "full", "browser-qa", "clinic-ops", "repo-maintainer", "deployment-operator"]);
 
   for (const template of templateNames) {
     const root = tmp();
@@ -42,9 +43,23 @@ test("initializes named templates", () => {
     assert.equal(result.template, template);
     const inspected = inspectProject(root);
     assert.equal(inspected.manifest.diagnostics.errors, 0);
-    assert.ok(inspected.manifest.skills.length > 0);
-    assert.ok(inspected.manifest.tools.length > 0);
+    if (template === "standard") {
+      assert.equal(inspected.manifest.skills.length, 0);
+      assert.equal(inspected.manifest.tools.length, 0);
+    } else {
+      assert.ok(inspected.manifest.skills.length > 0);
+      assert.ok(inspected.manifest.tools.length > 0);
+    }
   }
+});
+
+test("keeps default as a standard alias", () => {
+  const root = tmp();
+  const result = initProject(root, { template: "default" });
+  assert.equal(result.template, "default");
+  const inspected = inspectProject(root);
+  assert.equal(inspected.manifest.tools.length, 0);
+  assert.equal(inspected.manifest.subagents.length, 0);
 });
 
 test("lists bundled docs", () => {

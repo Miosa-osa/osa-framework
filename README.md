@@ -41,6 +41,14 @@ npx @miosa/osa info
 npx @miosa/osa build
 ```
 
+`osa init` uses the minimal `standard` template by default. Use named templates
+when you want a more opinionated agent:
+
+```bash
+npx @miosa/osa init repo-agent --template repo-maintainer
+npx @miosa/osa init everything-agent --template full
+```
+
 Then run or deploy it through the MIOSA CLI:
 
 ```bash
@@ -88,11 +96,14 @@ Real examples live in [`examples/`](examples):
 
 Built-in templates:
 
-- `default`
+- `standard`
+- `full`
 - `browser-qa`
 - `clinic-ops`
 - `repo-maintainer`
 - `deployment-operator`
+
+Compatibility alias: `default` maps to `standard`.
 
 ## Library
 

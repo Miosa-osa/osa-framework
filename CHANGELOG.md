@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+- Add clean `standard` template and make it the default.
+- Move the every-slot scaffold to `full`.
+- Keep `default` as a compatibility alias for `standard`.
+
 ## 0.1.3
 
 - Add built-in templates and `osa templates`.

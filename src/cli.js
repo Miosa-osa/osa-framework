@@ -10,7 +10,7 @@ const [, , command = "help", ...args] = process.argv;
 try {
   if (command === "init") {
     const target = firstPositional(args) ?? ".";
-    const result = initProject(target, { force: args.includes("--force"), template: optionValue(args, "--template") ?? "default" });
+    const result = initProject(target, { force: args.includes("--force"), template: optionValue(args, "--template") ?? "standard" });
     print(result);
   } else if (command === "info") {
     const target = args[0] && !args[0].startsWith("--") ? args[0] : ".";

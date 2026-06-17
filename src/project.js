@@ -5,7 +5,7 @@ import { getTemplateScaffold } from "./templates.js";
 
 export function initProject(target = ".", options = {}) {
   const root = projectRoot(target);
-  const template = options.template ?? "default";
+  const template = options.template ?? "standard";
   const scaffold = getTemplateScaffold(template);
   fs.mkdirSync(root, { recursive: true });
   const results = scaffold.map(([file, content]) => writeFileIfAllowed(root, file, content, options));
