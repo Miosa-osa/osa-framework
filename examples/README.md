@@ -19,6 +19,7 @@ Use examples when you want to study a fuller pattern.
 
 | Example | Purpose |
 | --- | --- |
+| [`standard-agent`](standard-agent) | One-file starter for making your own agent from scratch. |
 | [`browser-qa-agent`](browser-qa-agent) | Browser workflow QA with MIOSA Computer capabilities. |
 | [`clinic-ops-agent`](clinic-ops-agent) | White-label support operations with approvals and browser QA. |
 | [`repo-maintainer-agent`](repo-maintainer-agent) | PR review, CI triage, release notes, and issue maintenance. |

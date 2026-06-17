@@ -88,6 +88,7 @@ test("lists bundled docs", () => {
 
 test("builds launch examples", () => {
   for (const example of [
+    "standard-agent",
     "clinic-ops-agent",
     "browser-qa-agent",
     "repo-maintainer-agent",
@@ -96,8 +97,14 @@ test("builds launch examples", () => {
     const root = path.resolve("examples", example);
     const inspected = inspectProject(root);
     assert.equal(inspected.manifest.diagnostics.errors, 0);
-    assert.ok(inspected.manifest.tools.length > 0);
-    assert.ok(inspected.manifest.evals.length > 0);
+    if (example === "standard-agent") {
+      assert.equal(inspected.manifest.sourceRoot, "agent");
+      assert.equal(inspected.manifest.tools.length, 0);
+      assert.equal(inspected.manifest.evals.length, 0);
+    } else {
+      assert.ok(inspected.manifest.tools.length > 0);
+      assert.ok(inspected.manifest.evals.length > 0);
+    }
 
     const build = buildProject(root);
     assert.equal(build.errors, 0);

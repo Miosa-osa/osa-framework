@@ -1,5 +1,5 @@
 {
-  "name": "browser-qa-agent-example",
+  "name": "standard-agent-example",
   "private": true,
   "type": "module",
   "scripts": {

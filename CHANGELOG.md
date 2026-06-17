@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.7
+
+- Add `examples/standard-agent` as the visible one-file starter example.
+
 ## 0.1.6
 
 - Add OSA project standards documentation.
