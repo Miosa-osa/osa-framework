@@ -1,26 +1,24 @@
 import fs from "node:fs";
 import path from "node:path";
-import { artifactRoot, listFiles, osaRoot, projectRoot, rel } from "./fs.js";
+import { artifactRoot, listFiles, projectRoot, projectSpecRoot, projectSpecRootName, rel } from "./fs.js";
 import { parseSimpleYaml } from "./simple-yaml.js";
 import { listSkills } from "./skills.js";
 
 export function inspectProject(target = ".") {
   const root = projectRoot(target);
-  const osa = osaRoot(root);
+  const osa = projectSpecRoot(root);
+  const rootName = projectSpecRootName(root);
   const diagnostics = [];
   if (!fs.existsSync(osa)) {
-    diagnostics.push({ severity: "error", code: "osa.root.missing", message: "No osa/ directory found.", path: "osa" });
+    diagnostics.push({ severity: "error", code: "agent.root.missing", message: "No agent/ or osa/ directory found.", path: "agent" });
   }
 
   const agentPath = path.join(osa, "agent.yml");
   const agent = fs.existsSync(agentPath) ? parseSimpleYaml(fs.readFileSync(agentPath, "utf8")) : {};
-  if (!fs.existsSync(agentPath)) {
-    diagnostics.push({ severity: "warning", code: "agent.config.missing", message: "osa/agent.yml is missing.", path: "osa/agent.yml" });
-  }
 
   const instructionsPath = path.join(osa, "instructions.md");
   if (!fs.existsSync(instructionsPath)) {
-    diagnostics.push({ severity: "warning", code: "instructions.missing", message: "osa/instructions.md is missing.", path: "osa/instructions.md" });
+    diagnostics.push({ severity: "warning", code: "instructions.missing", message: `${rootName}/instructions.md is missing.`, path: `${rootName}/instructions.md` });
   }
 
   const computers = yamlDir(path.join(osa, "computers"), root).map((item) => ({
@@ -59,14 +57,15 @@ export function inspectProject(target = ".") {
   const manifest = {
     version: 1,
     projectRoot: root,
+    sourceRoot: rootName,
     osaRoot: osa,
     agent: {
       name: agent.name ?? path.basename(root),
       description: agent.description,
     },
     context: {
-      agentsMd: fs.existsSync(path.join(osa, "AGENTS.md")) ? "osa/AGENTS.md" : undefined,
-      instructions: fs.existsSync(instructionsPath) ? ["osa/instructions.md"] : [],
+      agentsMd: fs.existsSync(path.join(osa, "AGENTS.md")) ? `${rootName}/AGENTS.md` : undefined,
+      instructions: fs.existsSync(instructionsPath) ? [`${rootName}/instructions.md`] : [],
       docs: listFiles(path.join(osa, "docs"), root),
     },
     skills: listSkills(root),

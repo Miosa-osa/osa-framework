@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+- Make the default `standard` template a true one-file starter: `agent/instructions.md`.
+- Teach the manifest builder to inspect both `agent/` and `osa/` layouts.
+- Keep richer templates on the explicit `osa/` project layout.
+
 ## 0.1.4
 
 - Add clean `standard` template and make it the default.

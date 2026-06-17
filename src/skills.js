@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { osaRoot, rel } from "./fs.js";
+import { projectSpecRoot, rel } from "./fs.js";
 
 export function listSkills(projectRoot) {
-  const dir = path.join(osaRoot(projectRoot), "skills");
+  const dir = path.join(projectSpecRoot(projectRoot), "skills");
   if (!fs.existsSync(dir)) return [];
   const skills = [];
 

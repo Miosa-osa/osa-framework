@@ -12,7 +12,7 @@ osa init ./deploy-agent --template deployment-operator
 
 | Template | Use When |
 | --- | --- |
-| `standard` | You want a minimal agent without extra tools, channels, schedules, or subagents. |
+| `standard` | You want the one-file starter: `agent/instructions.md`. |
 | `full` | You want every OSA slot scaffolded with neutral defaults. |
 | `browser-qa` | You need browser workflow validation with MIOSA Computers. |
 | `clinic-ops` | You need white-label support operations with approval boundaries. |

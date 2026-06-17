@@ -12,7 +12,7 @@ OSA is different in the runtime it targets:
 | Persistent desktop automation | Not the core primitive | First-class through MIOSA Computers |
 | White-label deployments | Vercel deployment model | MIOSA tenant/workspace deployment records |
 | CLI integration | `npx eve` | `npx @miosa/osa` plus `miosa osa` |
-| Agent package | Filesystem project | Filesystem project plus MIOSA runtime metadata |
+| Agent package | `agent/instructions.md` upward | `agent/instructions.md` upward, plus MIOSA runtime metadata when needed |
 
 OSA should stay compatible with normal developer workflows while exposing MIOSA
 runtime primitives directly.

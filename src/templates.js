@@ -1,4 +1,11 @@
 const standardScaffold = [
+  [
+    "agent/instructions.md",
+    "# Instructions\n\nDescribe what your agent does, what it should care about, and when it should ask for approval.\n",
+  ],
+];
+
+const fullScaffold = [
   ["osa/AGENTS.md", "# OSA Project Instructions\n\nKeep always-needed operating context here.\n"],
   [
     "osa/agent.yml",
@@ -14,10 +21,6 @@ const standardScaffold = [
   ],
   ["osa/docs/README.md", "# OSA Project Docs\n\nReference material for this agent.\n"],
   ["osa/evals/smoke.yml", "name: smoke\nprompt: Summarize this OSA project.\nchecks:\n  - completed\n"],
-];
-
-const fullScaffold = [
-  ...standardScaffold,
   [
     "osa/computers/default.yml",
     "enabled: false\nkind: miosa-computer\nsize: standard\ncapabilities:\n  browser: true\n  screenshot: true\n  shell: true\n  desktop: true\n",
@@ -54,7 +57,7 @@ const fullScaffold = [
 
 const templateOverrides = {
   standard: {
-    description: "Minimal OSA project: instructions, permissions, docs, and one smoke eval.",
+    description: "One-file starter: agent/instructions.md.",
     base: standardScaffold,
     files: [],
   },

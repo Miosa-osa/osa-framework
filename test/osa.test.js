@@ -12,11 +12,13 @@ function tmp() {
 test("initializes and inspects an OSA project", () => {
   const root = tmp();
   const result = initProject(root);
-  assert.ok(result.written.includes("osa/AGENTS.md"));
+  assert.deepEqual(result.written, ["agent/instructions.md"]);
   assert.equal(result.template, "standard");
 
   const inspected = inspectProject(root);
-  assert.equal(inspected.manifest.agent.name, "osa-agent");
+  assert.equal(inspected.manifest.sourceRoot, "agent");
+  assert.deepEqual(inspected.manifest.context.instructions, ["agent/instructions.md"]);
+  assert.equal(inspected.manifest.agent.name, path.basename(root));
   assert.equal(inspected.manifest.skills.length, 0);
   assert.equal(inspected.manifest.tools.length, 0);
   assert.equal(inspected.manifest.channels.length, 0);
@@ -44,6 +46,7 @@ test("initializes named templates", () => {
     const inspected = inspectProject(root);
     assert.equal(inspected.manifest.diagnostics.errors, 0);
     if (template === "standard") {
+      assert.deepEqual(result.written, ["agent/instructions.md"]);
       assert.equal(inspected.manifest.skills.length, 0);
       assert.equal(inspected.manifest.tools.length, 0);
     } else {
@@ -57,9 +60,24 @@ test("keeps default as a standard alias", () => {
   const root = tmp();
   const result = initProject(root, { template: "default" });
   assert.equal(result.template, "default");
+  assert.deepEqual(result.written, ["agent/instructions.md"]);
   const inspected = inspectProject(root);
   assert.equal(inspected.manifest.tools.length, 0);
   assert.equal(inspected.manifest.subagents.length, 0);
+});
+
+test("inspects a hand-written one-file agent layout", () => {
+  const root = tmp();
+  fs.mkdirSync(path.join(root, "agent"), { recursive: true });
+  fs.writeFileSync(path.join(root, "agent", "instructions.md"), "Review invoices and ask before sending email.\n");
+
+  const inspected = inspectProject(root);
+  assert.equal(inspected.manifest.sourceRoot, "agent");
+  assert.equal(inspected.manifest.diagnostics.errors, 0);
+  assert.equal(inspected.manifest.context.instructions[0], "agent/instructions.md");
+
+  const build = buildProject(root);
+  assert.equal(build.errors, 0);
 });
 
 test("lists bundled docs", () => {

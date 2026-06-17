@@ -9,6 +9,22 @@ export function osaRoot(root) {
   return path.join(root, "osa");
 }
 
+export function agentRoot(root) {
+  return path.join(root, "agent");
+}
+
+export function projectSpecRoot(root) {
+  const osa = osaRoot(root);
+  const agent = agentRoot(root);
+  if (fs.existsSync(osa)) return osa;
+  if (fs.existsSync(agent)) return agent;
+  return osa;
+}
+
+export function projectSpecRootName(root) {
+  return path.basename(projectSpecRoot(root));
+}
+
 export function artifactRoot(root) {
   return path.join(root, ".miosa");
 }

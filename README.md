@@ -14,6 +14,16 @@ An OSA Project packages instructions, tools, skills, docs, connections,
 channels, schedules, evals, permissions, subagents, and Computers into one
 inspectable directory.
 
+The smallest project is one file:
+
+```text
+my-agent/
+  agent/
+    instructions.md
+```
+
+Add more files only when the agent needs them.
+
 ```text
 my-agent/
   osa/
@@ -41,8 +51,8 @@ npx @miosa/osa info
 npx @miosa/osa build
 ```
 
-`osa init` uses the minimal `standard` template by default. Use named templates
-when you want a more opinionated agent:
+`osa init` uses the one-file `standard` template by default. Use named templates
+when you want a more opinionated project:
 
 ```bash
 npx @miosa/osa init repo-agent --template repo-maintainer

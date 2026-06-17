@@ -9,6 +9,12 @@ npx @miosa/osa info
 npx @miosa/osa build
 ```
 
+The default starter writes only:
+
+```text
+agent/instructions.md
+```
+
 Publish and deploy through the MIOSA CLI:
 
 ```bash

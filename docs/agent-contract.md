@@ -2,9 +2,8 @@
 
 An OSA project is valid when:
 
-- `osa/` exists.
-- `osa/agent.yml` names the agent.
-- `osa/instructions.md` describes base behavior.
+- `agent/instructions.md` exists, or
+- `osa/instructions.md` exists in a richer OSA project.
 - Optional capability directories use stable names: `tools`, `skills`,
   `subagents`, `channels`, `schedules`, `connections`, `computers`, `evals`,
   and `docs`.

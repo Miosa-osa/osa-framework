@@ -1,6 +1,14 @@
 # OSA Project Layout
 
-OSA Projects are filesystem-defined agent operating environments.
+OSA Projects are filesystem-defined agent operating environments. The smallest
+valid project is:
+
+```text
+agent/
+  instructions.md
+```
+
+Use the richer `osa/` layout when you want explicit project slots:
 
 ```text
 osa/
@@ -22,6 +30,7 @@ osa/
 
 | Path | Purpose |
 |---|---|
+| `agent/instructions.md` | One-file starter for simple agents. |
 | `AGENTS.md` | Always-needed operating context. |
 | `agent.yml` | Agent identity and runtime defaults. |
 | `instructions.md` | Base system instructions. |
