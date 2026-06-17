@@ -95,6 +95,12 @@ osa templates
 `osa docs` prints the bundled documentation path. Coding agents can read those
 files from `node_modules/@miosa/osa/docs` after installation.
 
+## Standards
+
+Read [`docs/standards.md`](docs/standards.md) before publishing a serious OSA
+project. It defines the expected bar for instructions, tools, skills, subagents,
+permissions, evals, schedules, channels, examples, and deployment readiness.
+
 ## Examples
 
 Real examples live in [`examples/`](examples):

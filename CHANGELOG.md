@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6
+
+- Add OSA project standards documentation.
+- Add examples index and quality bar.
+- Link standards from README and getting started docs.
+
 ## 0.1.5
 
 - Make the default `standard` template a true one-file starter: `agent/instructions.md`.

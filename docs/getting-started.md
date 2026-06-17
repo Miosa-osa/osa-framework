@@ -15,6 +15,8 @@ The default starter writes only:
 agent/instructions.md
 ```
 
+Before publishing a serious project, read [`standards.md`](standards.md).
+
 Publish and deploy through the MIOSA CLI:
 
 ```bash
