@@ -2,6 +2,7 @@
 import { initProject } from "./project.js";
 import { inspectProject, writeArtifacts } from "./manifest.js";
 import { buildProject } from "./build.js";
+import { docsPath, listDocs } from "./docs.js";
 
 const [, , command = "help", ...args] = process.argv;
 
@@ -21,6 +22,8 @@ try {
   } else if (command === "skills") {
     const target = args[0] && !args[0].startsWith("--") ? args[0] : ".";
     print(inspectProject(target).manifest.skills);
+  } else if (command === "docs") {
+    print({ docsPath: docsPath(), docs: listDocs() });
   } else {
     console.log(`osa
 
@@ -29,6 +32,7 @@ Commands:
   osa info [target]
   osa build [target]
   osa skills [target]
+  osa docs
 `);
   }
 } catch (error) {

@@ -1,0 +1,4 @@
+name: browser-qa-agent
+description: Browser workflow QA agent for MIOSA Computers.
+runtime:
+  target: computer

@@ -1,0 +1,6 @@
+name: browser-report
+prompt: Report a failed signup test.
+checks:
+  - includes_steps
+  - includes_expected_actual
+  - includes_reproducibility

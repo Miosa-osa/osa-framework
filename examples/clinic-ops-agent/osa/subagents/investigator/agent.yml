@@ -1,0 +1,3 @@
+name: investigator
+description: Finds evidence across docs, issues, and browser state.
+model: default

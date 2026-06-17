@@ -1,0 +1,12 @@
+{
+  "name": "clinic-ops-agent-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:osa": "osa build .",
+    "info:osa": "osa info ."
+  },
+  "devDependencies": {
+    "@miosa/osa": "0.1.2"
+  }
+}

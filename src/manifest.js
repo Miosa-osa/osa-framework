@@ -38,6 +38,24 @@ export function inspectProject(target = ".") {
     hasAuth: Boolean(item.data.auth && Object.keys(item.data.auth).length > 0),
   }));
 
+  const channels = yamlDir(path.join(osa, "channels"), root).map((item) => ({
+    name: item.name,
+    path: item.path,
+    type: item.data.type ?? "unknown",
+    description: item.data.description ?? "",
+    entrypoint: item.data.entrypoint,
+  }));
+
+  const schedules = yamlDir(path.join(osa, "schedules"), root).map((item) => ({
+    name: item.data.name ?? item.name,
+    path: item.path,
+    cron: item.data.cron,
+    prompt: item.data.prompt,
+  }));
+
+  const subagents = subagentDir(path.join(osa, "subagents"), root);
+  const tools = listFiles(path.join(osa, "tools"), root).filter((file) => /\.(mjs|js|ts)$/.test(file));
+
   const manifest = {
     version: 1,
     projectRoot: root,
@@ -52,6 +70,10 @@ export function inspectProject(target = ".") {
       docs: listFiles(path.join(osa, "docs"), root),
     },
     skills: listSkills(root),
+    tools,
+    subagents,
+    channels,
+    schedules,
     connections,
     computers,
     evals: listFiles(path.join(osa, "evals"), root),
@@ -85,6 +107,25 @@ function yamlDir(dir, root) {
         name: entry.name.replace(/\.ya?ml$/, ""),
         path: rel(root, full),
         data: parseSimpleYaml(fs.readFileSync(full, "utf8")),
+      };
+    });
+}
+
+function subagentDir(dir, root) {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => {
+      const agentPath = path.join(dir, entry.name, "agent.yml");
+      const instructionsPath = path.join(dir, entry.name, "instructions.md");
+      const data = fs.existsSync(agentPath) ? parseSimpleYaml(fs.readFileSync(agentPath, "utf8")) : {};
+      return {
+        name: data.name ?? entry.name,
+        path: rel(root, path.join(dir, entry.name)),
+        description: data.description ?? "",
+        model: data.model,
+        instructions: fs.existsSync(instructionsPath) ? rel(root, instructionsPath) : undefined,
       };
     });
 }

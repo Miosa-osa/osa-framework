@@ -1,0 +1,6 @@
+name: support-summary
+prompt: Summarize a login failure with evidence and next action.
+checks:
+  - cites_evidence
+  - includes_next_action
+  - avoids_clinical_claims

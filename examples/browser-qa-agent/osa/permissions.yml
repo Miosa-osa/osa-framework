@@ -1,0 +1,12 @@
+filesystem:
+  read:
+    - .
+  write:
+    - ./workspace
+network:
+  default: deny
+secrets:
+  allow: []
+approvals:
+  required_for:
+    - destructive_browser_action

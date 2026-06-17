@@ -1,0 +1,17 @@
+filesystem:
+  read:
+    - .
+  write:
+    - ./workspace
+network:
+  default: deny
+  allow:
+    - api.miosa.ai
+secrets:
+  allow:
+    - GITHUB_TOKEN
+approvals:
+  required_for:
+    - patient_data_change
+    - outbound_message
+    - network:external

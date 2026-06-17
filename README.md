@@ -1,12 +1,18 @@
-# OSA
+# OSA Framework
+
+[![CI](https://github.com/Miosa-osa/osa-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/Miosa-osa/osa-framework/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@miosa/osa.svg)](https://www.npmjs.com/package/@miosa/osa)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 OSA is MIOSA's filesystem-first framework for agent operating environments.
 
 Package: `@miosa/osa`
+
 Repository: `Miosa-osa/osa-framework`
 
-An OSA Project packages instructions, tools, skills, docs, connections, channels,
-evals, permissions, and Computers into one inspectable directory:
+An OSA Project packages instructions, tools, skills, docs, connections,
+channels, schedules, evals, permissions, subagents, and Computers into one
+inspectable directory.
 
 ```text
 my-agent/
@@ -18,6 +24,7 @@ my-agent/
     computers/
     connections/
     channels/
+    schedules/
     docs/
     evals/
     skills/
@@ -31,26 +38,29 @@ my-agent/
 npx @miosa/osa init my-agent
 cd my-agent
 npx @miosa/osa info
+npx @miosa/osa build
 ```
 
-Then run it through the MIOSA CLI:
+Then run or deploy it through the MIOSA CLI:
 
 ```bash
+miosa osa publish --workspace <workspace-id>
+miosa osa deploy --workspace <workspace-id> --wait
 miosa osa run "inspect this repo" --sandbox <sandbox-id>
 miosa osa run "validate the browser workflow" --computer <computer-id>
 ```
 
-## Why This Exists
+## Why OSA
 
-Vercel Eve makes agents easy to understand by making the filesystem the authoring
-surface. OSA uses the same inspectable project idea, but targets MIOSA's operating
-platform: Computers, OpenComputers, persistent workspaces, white-label
-deployments, and BYOC runtime targets.
+Filesystem-first agents are easier to inspect, review, test, and operate. OSA
+uses that authoring model, but targets MIOSA's platform primitives:
 
-## Status
-
-This package is the standalone framework surface. Runtime dispatch, tenant auth,
-Computer execution, and deployment live in the MIOSA platform and `miosa` CLI.
+- Computers and browser-capable desktop automation
+- OpenComputers and BYOC runtime targets
+- Persistent sandboxes and workspace state
+- Durable deployment records through `miosa osa deploy`
+- Skills, tools, subagents, schedules, channels, evals, docs, and approvals
+- White-label platform deployments where the agent runs inside customer-facing products
 
 ## Commands
 
@@ -59,7 +69,18 @@ osa init [target]
 osa info [target]
 osa build [target]
 osa skills [target]
+osa docs
 ```
+
+`osa docs` prints the bundled documentation path. Coding agents can read those
+files from `node_modules/@miosa/osa/docs` after installation.
+
+## Examples
+
+Real examples live in [`examples/`](examples):
+
+- [`examples/clinic-ops-agent`](examples/clinic-ops-agent): operational support agent with browser QA, schedule, GitHub/MCP connection, approvals, and a specialist investigator subagent.
+- [`examples/browser-qa-agent`](examples/browser-qa-agent): focused browser workflow QA agent using MIOSA Computer capabilities.
 
 ## Library
 
@@ -70,3 +91,9 @@ await initProject("my-agent");
 const project = inspectProject("my-agent");
 const build = buildProject("my-agent");
 ```
+
+## Status
+
+This package is the standalone framework authoring surface. Runtime dispatch,
+tenant auth, Computer execution, and deployment are provided by the MIOSA
+platform and the `miosa` CLI.

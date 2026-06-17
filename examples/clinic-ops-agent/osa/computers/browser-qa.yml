@@ -1,0 +1,8 @@
+enabled: true
+kind: miosa-computer
+size: standard
+capabilities:
+  browser: true
+  screenshot: true
+  shell: true
+  desktop: true

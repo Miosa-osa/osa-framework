@@ -1,0 +1,5 @@
+type: mcp
+description: Repository and issue context for product investigations.
+auth:
+  mode: env
+  variable: GITHUB_TOKEN
