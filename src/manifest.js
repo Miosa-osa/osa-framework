@@ -101,8 +101,10 @@ export function inspectProject(target = ".") {
     agent: {
       name: agent.name ?? packageName ?? path.basename(root),
       description: agent.description,
+      model: agentModelName(agent.runtimeProfile),
       config: agentConfigPath ? rel(root, agentConfigPath) : undefined,
     },
+    runtimeProfile: agent.runtimeProfile ?? {},
     context: {
       agentsMd: fs.existsSync(path.join(osa, "AGENTS.md")) ? `${rootName}/AGENTS.md` : undefined,
       instructions: fs.existsSync(instructionsPath) ? [`${rootName}/instructions.md`] : [],
@@ -200,7 +202,7 @@ function subagentDir(dir, root) {
         name: data.name ?? entry.name,
         path: rel(root, path.join(dir, entry.name)),
         description: data.description ?? "",
-        model: data.model,
+        model: agentModelName(data.runtimeProfile),
         config: agentPath ? rel(root, agentPath) : undefined,
         instructions: fs.existsSync(instructionsPath) ? rel(root, instructionsPath) : undefined,
       };
@@ -224,19 +226,167 @@ function readPackageName(root) {
 
 function readAgentMetadata(agentPath, legacyAgentPath) {
   if (legacyAgentPath && fs.existsSync(legacyAgentPath)) {
-    return parseSimpleYaml(fs.readFileSync(legacyAgentPath, "utf8"));
+    const config = parseSimpleYaml(fs.readFileSync(legacyAgentPath, "utf8"));
+    return {
+      ...config,
+      runtimeProfile: legacyRuntimeProfile(config),
+    };
   }
   if (!agentPath || !fs.existsSync(agentPath) || !/\.[cm]?[jt]s$/.test(agentPath)) return {};
   const source = fs.readFileSync(agentPath, "utf8");
   return {
     description: readStringProperty(source, "description"),
-    model: readStringProperty(source, "model"),
+    runtimeProfile: readRuntimeProfile(source),
   };
 }
 
 function readStringProperty(source, property) {
   const pattern = new RegExp(`${property}:\\s*["']([^"']+)["']`);
   return pattern.exec(source)?.[1];
+}
+
+function readRuntimeProfile(source) {
+  const model = readModelConfig(source);
+  const harness = readObjectConfig(source, "harness");
+  const runtime = readObjectConfig(source, "runtime");
+  const sandbox = readObjectConfig(source, "sandbox");
+  const policy = readObjectConfig(source, "policy");
+  const capabilities = readObjectConfig(source, "capabilities");
+  const provider = readStringProperty(source, "provider") ?? stringField(harness, "engine");
+
+  return compactRecord({
+    ...(model !== undefined ? { model } : {}),
+    ...(provider ? { provider } : {}),
+    ...(harness ? { harness } : {}),
+    ...(runtime ? { runtime } : {}),
+    ...(sandbox ? { sandbox } : {}),
+    ...(policy ? { policy } : {}),
+    ...(capabilities ? { capabilities } : {}),
+  });
+}
+
+function legacyRuntimeProfile(config) {
+  return compactRecord({
+    ...(typeof config.model === "string" ? { model: config.model } : {}),
+    ...(typeof config.provider === "string" ? { provider: config.provider } : {}),
+    ...(isPlainRecord(config.runtime) ? { runtime: config.runtime } : {}),
+    ...(isPlainRecord(config.sandbox) ? { sandbox: config.sandbox } : {}),
+  });
+}
+
+function readModelConfig(source) {
+  const block = readObjectBlock(source, "model");
+  if (!block) return readStringProperty(source, "model");
+  return compactRecord({
+    ...(readStringProperty(block, "primary") ? { primary: readStringProperty(block, "primary") } : {}),
+    ...(readStringProperty(block, "id") ? { id: readStringProperty(block, "id") } : {}),
+    ...(readStringProperty(block, "default") ? { default: readStringProperty(block, "default") } : {}),
+    ...(readStringArrayInBlock(block, "fallback") ? { fallback: readStringArrayInBlock(block, "fallback") } : {}),
+  });
+}
+
+function readObjectConfig(source, property) {
+  const block = readObjectBlock(source, property);
+  if (!block) return undefined;
+  const record = {};
+  for (const key of ["engine", "mode", "target", "durability", "isolation", "backend", "network", "profile"]) {
+    const value = readStringProperty(block, key);
+    if (value) record[key] = value;
+  }
+  for (const key of ["durable", "checkpointing", "streaming", "codeEditing", "shell", "browser", "github"]) {
+    const value = readBooleanInBlock(block, key);
+    if (value !== undefined) record[key] = value;
+  }
+  for (const key of ["allowed", "approvals", "required"]) {
+    const value = readStringArrayInBlock(block, key);
+    if (value) record[key] = value;
+  }
+  const resourcesBlock = readObjectBlock(block, "resources");
+  if (resourcesBlock) {
+    const resources = {};
+    for (const key of ["cpu", "memoryGb", "diskGb", "gpu"]) {
+      const number = readNumberInBlock(resourcesBlock, key);
+      const string = readStringProperty(resourcesBlock, key);
+      if (number !== undefined) resources[key] = number;
+      else if (string) resources[key] = string;
+    }
+    if (Object.keys(resources).length > 0) record.resources = resources;
+  }
+  return Object.keys(record).length > 0 ? record : undefined;
+}
+
+function readObjectBlock(source, property) {
+  const pattern = new RegExp(`${property}:\\s*\\{`);
+  const match = pattern.exec(source);
+  if (!match) return undefined;
+  const open = source.indexOf("{", match.index);
+  if (open === -1) return undefined;
+
+  let depth = 0;
+  let quote;
+  for (let index = open; index < source.length; index += 1) {
+    const char = source[index];
+    const previous = source[index - 1];
+    if (quote) {
+      if (char === quote && previous !== "\\") quote = undefined;
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") {
+      quote = char;
+      continue;
+    }
+    if (char === "{") depth += 1;
+    if (char === "}") {
+      depth -= 1;
+      if (depth === 0) return source.slice(open + 1, index);
+    }
+  }
+  return undefined;
+}
+
+function readBooleanInBlock(block, property) {
+  const pattern = new RegExp(`${property}:\\s*(true|false)\\b`);
+  const value = pattern.exec(block)?.[1];
+  return value === "true" ? true : value === "false" ? false : undefined;
+}
+
+function readNumberInBlock(block, property) {
+  const pattern = new RegExp(`${property}:\\s*(\\d+(?:\\.\\d+)?)\\b`);
+  const raw = pattern.exec(block)?.[1];
+  return raw ? Number(raw) : undefined;
+}
+
+function readStringArrayInBlock(block, property) {
+  const pattern = new RegExp(`${property}:\\s*\\[([^\\]]*)\\]`);
+  const body = pattern.exec(block)?.[1];
+  if (!body) return undefined;
+  const quotedValue = new RegExp("[\"']([^\"']+)[\"']", "g");
+  const values = Array.from(body.matchAll(quotedValue)).map((match) => match[1]).filter(Boolean);
+  return values.length > 0 ? values : undefined;
+}
+
+function compactRecord(record) {
+  return Object.fromEntries(
+    Object.entries(record).filter(([, value]) => {
+      if (value === undefined) return false;
+      if (isPlainRecord(value)) return Object.keys(value).length > 0;
+      return true;
+    }),
+  );
+}
+
+function isPlainRecord(value) {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function stringField(record, key) {
+  return isPlainRecord(record) && typeof record[key] === "string" ? record[key] : undefined;
+}
+
+function agentModelName(profile) {
+  if (!profile) return undefined;
+  if (typeof profile.model === "string") return profile.model;
+  return stringField(profile.model, "primary") ?? stringField(profile.model, "id") ?? stringField(profile.model, "default");
 }
 
 function parseMarkdownFrontmatter(source) {

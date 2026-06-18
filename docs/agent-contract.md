@@ -14,3 +14,8 @@ backward compatibility.
 
 The generated manifest is the backend contract. It should be stable enough for
 deployment records, runtime hydration, and directory/marketplace surfaces.
+
+When `agent/agent.ts` is present, the manifest includes `runtimeProfile`. That
+profile is the normalized operating spec MIOSA uses to select or validate model
+routing, harness engine, sandbox backend, runtime durability, and policy before
+creating an execution packet.

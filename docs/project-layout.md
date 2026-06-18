@@ -53,7 +53,7 @@ description for older projects.
 | Path | Purpose |
 | --- | --- |
 | `agent/instructions.md` | Required base system instructions. |
-| `agent/agent.ts` | Optional runtime config, model, and target hints. |
+| `agent/agent.ts` | Optional agent operating profile: model routing, harness, runtime, sandbox, and policy. |
 | `agent/AGENTS.md` | Always-needed operating context for coding agents. |
 | `agent/permissions.yml` | File, network, secret, tool, and Computer policy. |
 | `agent/computers/` | MIOSA Computer profiles for browser or desktop work. |
@@ -73,3 +73,19 @@ description for older projects.
 New projects should use `agent/`. Existing projects with `osa/` are still
 supported as a legacy authored surface so current users do not have to migrate
 immediately.
+
+## Runtime Profile
+
+`agent/agent.ts` is the bridge between the filesystem contract and MIOSA
+execution. Keep the axes separate:
+
+- `model`: model provider routing and fallback.
+- `harness`: execution engine such as `auto`, `codex`, `claude-code`,
+  `hermes`, `osa`, or `custom`.
+- `runtime`: deployment target, durability, checkpointing, and streaming.
+- `sandbox`: compute backend such as `miosa-computer`, `miosa-sandbox`,
+  `local-docker`, or `byoc`.
+- `policy`: approvals, network posture, and side-effect controls.
+
+The manifest stores the compiled profile as `runtimeProfile` so MIOSA can plan
+the concrete execution packet without scraping arbitrary source files.

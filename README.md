@@ -97,6 +97,34 @@ miosa osa run "inspect this repo" --sandbox <sandbox-id>
 miosa osa run "validate the browser workflow" --computer <computer-id>
 ```
 
+`agent/agent.ts` declares the agent operating profile. The framework compiles
+that profile into the manifest; the MIOSA CLI/backend use it as the default for
+run and deploy unless a CLI flag overrides it.
+
+```ts
+import { defineAgent } from "@miosa/osa";
+
+export default defineAgent({
+  model: {
+    primary: "openai/gpt-5",
+    fallback: ["anthropic/claude-sonnet-4.6"],
+  },
+  harness: {
+    engine: "auto",
+    allowed: ["codex", "claude-code", "hermes", "osa"],
+  },
+  runtime: {
+    target: "miosa-cloud",
+    durability: "checkpointed",
+    streaming: true,
+  },
+  sandbox: {
+    backend: "auto",
+    allowed: ["miosa-computer", "miosa-sandbox", "local-docker"],
+  },
+});
+```
+
 ## Why OSA
 
 Filesystem-first agents are easier to inspect, review, test, and operate. OSA
@@ -106,6 +134,8 @@ uses that authoring model, but targets MIOSA platform primitives:
 - OpenComputers and BYOC runtime targets
 - Persistent sandboxes and workspace state
 - Durable deployment records through `miosa osa deploy`
+- Runtime profiles that separate model routing, harness engine, compute backend,
+  durability, and policy
 - Skills, tools, subagents, schedules, channels, root-level evals, docs, and approvals
 - White-label deployments where the agent runs inside customer-facing products
 

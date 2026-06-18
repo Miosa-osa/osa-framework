@@ -8,7 +8,8 @@ OSA is different in the runtime it targets:
 | Area | Eve | OSA |
 | --- | --- | --- |
 | Primary platform | Vercel | MIOSA |
-| Runtime target | Vercel agent stack | Computers, Sandboxes, OpenComputers, BYOC |
+| Runtime target | Vercel agent stack | MIOSA planner over Computers, Sandboxes, OpenComputers, BYOC |
+| Harness selection | Mostly implicit in Vercel's stack | Explicit or auto-planned: Codex, Claude Code, Hermes, OSA, custom |
 | Persistent desktop automation | Not the core primitive | First-class through MIOSA Computers |
 | White-label deployments | Vercel deployment model | MIOSA tenant/workspace deployment records |
 | CLI integration | `npx eve` | `npx @miosa/osa` plus `miosa osa` |
@@ -28,16 +29,16 @@ package, templates, examples, and build artifacts that coding agents can
 inspect.
 
 OSA should not copy Vercel-specific platform assumptions. The differentiator is
-MIOSA runtime access: Computers, persistent sandboxes, OpenComputer/BYOC targets,
-workspace-scoped deployments, white-label product surfaces, and CLI integration
-through `miosa osa`.
+MIOSA runtime access: explicit runtime profiles, harness selection, Computers,
+persistent sandboxes, OpenComputer/BYOC targets, workspace-scoped deployments,
+white-label product surfaces, and CLI integration through `miosa osa`.
 
 ## Launch-Page Parity Checklist
 
 The visible OSA standard example should cover the same agent-building sequence:
 
 - `instructions.md`: complete agent instructions in Markdown
-- `agent.ts`: model and runtime configuration
+- `agent.ts`: model, harness, runtime, sandbox, and policy profile
 - `skills/`: reusable Markdown playbooks
 - `tools/`: TypeScript model-callable tools
 - `sandbox/`: isolated workspace setup

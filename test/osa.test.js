@@ -52,6 +52,7 @@ test("initializes named templates", () => {
     } else {
       assert.equal(inspected.manifest.sourceRoot, "agent");
       assert.equal(inspected.manifest.agent.config, "agent/agent.ts");
+      assert.ok(inspected.manifest.runtimeProfile);
       assert.ok(result.written.includes("agent/agent.ts"));
       assert.ok(result.written.some((file) => file.startsWith("evals/")));
       assert.ok(inspected.manifest.skills.length > 0);
@@ -121,6 +122,11 @@ test("builds launch examples", () => {
     } else if (example === "standard-agent") {
       assert.equal(inspected.manifest.sourceRoot, "agent");
       assert.equal(inspected.manifest.agent.config, "agent/agent.ts");
+      assert.equal(inspected.manifest.agent.model, "openai/gpt-5.4-mini");
+      assert.deepEqual(inspected.manifest.runtimeProfile.model.fallback, ["anthropic/claude-sonnet-4.6"]);
+      assert.equal(inspected.manifest.runtimeProfile.harness.engine, "auto");
+      assert.equal(inspected.manifest.runtimeProfile.runtime.durability, "checkpointed");
+      assert.equal(inspected.manifest.runtimeProfile.sandbox.backend, "miosa-sandbox");
       assert.equal(inspected.manifest.skills.length, 1);
       assert.equal(inspected.manifest.tools[0], "agent/tools/get_weather.ts");
       assert.equal(inspected.manifest.channels[0].path, "agent/channels/slack.ts");

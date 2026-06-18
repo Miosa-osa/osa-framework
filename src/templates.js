@@ -9,7 +9,7 @@ const fullScaffold = [
   ["agent/AGENTS.md", "# OSA Agent Instructions\n\nKeep always-needed operating context here.\n"],
   [
     "agent/agent.ts",
-    'import { defineAgent } from "@miosa/osa";\n\nexport default defineAgent({\n  description: "Filesystem-defined OSA agent operating environment.",\n  model: "default",\n  runtime: {\n    target: "local",\n  },\n});\n',
+    'import { defineAgent } from "@miosa/osa";\n\nexport default defineAgent({\n  description: "Filesystem-defined OSA agent operating environment.",\n  model: {\n    primary: "default",\n    fallback: [],\n  },\n  harness: {\n    engine: "auto",\n    allowed: ["codex", "claude-code", "hermes", "osa"],\n  },\n  runtime: {\n    target: "miosa-cloud",\n    durability: "checkpointed",\n    streaming: true,\n  },\n  sandbox: {\n    backend: "auto",\n    allowed: ["miosa-computer", "miosa-sandbox", "local-docker"],\n    resources: {\n      cpu: 2,\n      memoryGb: 4,\n    },\n  },\n  policy: {\n    network: "restricted",\n    approvals: ["external_side_effects"],\n  },\n  capabilities: {\n    shell: true,\n    browser: true,\n  },\n});\n',
   ],
   [
     "agent/instructions.md",
@@ -48,7 +48,7 @@ const fullScaffold = [
   ],
   [
     "agent/subagents/investigator/agent.ts",
-    'import { defineAgent } from "@miosa/osa";\n\nexport default defineAgent({\n  description: "Research and evidence-gathering subagent.",\n  model: "default",\n});\n',
+    'import { defineAgent } from "@miosa/osa";\n\nexport default defineAgent({\n  description: "Research and evidence-gathering subagent.",\n  model: {\n    primary: "default",\n  },\n  harness: {\n    engine: "auto",\n  },\n});\n',
   ],
   [
     "agent/subagents/investigator/instructions.md",
